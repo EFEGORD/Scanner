@@ -4,11 +4,18 @@
 # necesita una cuenta iniciada en Xcode → Settings → Accounts.
 #
 #   mac-build.sh <Release|Debug> <UDID del iPhone> [UltraScanner]
+#   mac-build.sh appstore <número de compilación>     archiva y sube (scripts/mac-appstore.sh)
+#
+# El agente de UltraVocal solo sabe correr este script, así que la subida a la tienda pasa por aquí.
 set -euo pipefail
 
 CONFIG="$1"
 DEVICE="$2"
 SCHEME="${3:-UltraScanner}"
+
+if [ "$CONFIG" = "appstore" ]; then
+  exec "$(dirname "$0")/mac-appstore.sh" "$DEVICE"
+fi
 TEAM_ID="C6XD8H2J47" # Fernando Jimenez Gordillo (Apple Developer Program)
 BUNDLE_ID="mx.com.claudita.ultrascanner"
 

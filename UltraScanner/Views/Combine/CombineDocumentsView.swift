@@ -34,6 +34,16 @@ struct CombineDocumentsView: View {
                     viewModel.preload(initialDocument)
                     didPreload = true
                 }
+                #if DEBUG
+                if !didPreload && DemoMode.isActive {
+                    // An ID, proof of address and the signed lease, with the IDs found by search.
+                    for title in [DemoMode.idTitle, DemoMode.billTitle, DemoMode.leaseTitle] {
+                        if let document = DemoMode.document(titled: title) { viewModel.preload(document) }
+                    }
+                    viewModel.query = DemoMode.searchQuery
+                    didPreload = true
+                }
+                #endif
             }
             .fullScreenCover(isPresented: $showScanner) {
                 DocumentScannerView(

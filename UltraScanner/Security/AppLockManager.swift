@@ -19,6 +19,9 @@ final class AppLockManager: ObservableObject {
     private init() {}
 
     func lockIfNeeded() {
+        #if DEBUG
+        if DemoMode.isActive { isLocked = false; return }
+        #endif
         guard isEnabled else { isLocked = false; return }
         isLocked = true
     }

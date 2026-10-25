@@ -5,32 +5,54 @@ struct UltraScannerApp: App {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @StateObject private var appLock = AppLockManager.shared
 
+    #if DEBUG
+    @State private var demoReady = !DemoMode.isActive
+    #endif
+
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                if hasCompletedOnboarding {
-                    LibraryView()
-                } else {
-                    OnboardingFlowView(onFinished: {
-                        hasCompletedOnboarding = true
-                        // The user just went through setup; don't ask for Face ID right away.
+            #if DEBUG
+            if !demoReady {
+                ProgressView()
+                    .task {
+                        await DemoMode.prepare()
+                        hasCompletedOnboarding = DemoMode.screen != "security"
                         appLock.markUnlocked()
-                    })
-                }
+                        demoReady = true
+                    }
+            } else {
+                content
+            }
+            #else
+            content
+            #endif
+        }
+    }
 
-                if appLock.isLocked && hasCompletedOnboarding {
-                    LockScreenView()
-                        .transition(.opacity)
-                }
+    private var content: some View {
+        ZStack {
+            if hasCompletedOnboarding {
+                LibraryView()
+            } else {
+                OnboardingFlowView(onFinished: {
+                    hasCompletedOnboarding = true
+                    // The user just went through setup; don't ask for Face ID right away.
+                    appLock.markUnlocked()
+                })
             }
-            .onAppear {
-                appLock.lockIfNeeded()
-                AdManager.shared.prepareIfConsented()
+
+            if appLock.isLocked && hasCompletedOnboarding {
+                LockScreenView()
+                    .transition(.opacity)
             }
-            .task { await DocumentTypeBackfill.run() }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                appLock.lockIfNeeded()
-            }
+        }
+        .onAppear {
+            appLock.lockIfNeeded()
+            AdManager.shared.prepareIfConsented()
+        }
+        .task { await DocumentTypeBackfill.run() }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            appLock.lockIfNeeded()
         }
     }
 }

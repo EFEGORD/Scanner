@@ -59,6 +59,11 @@ struct OnboardingFlowView: View {
             .navigationDestination(isPresented: $goToPermissions) {
                 CameraPermissionView(onFinished: onFinished)
             }
+            #if DEBUG
+            .onAppear {
+                if DemoMode.isActive && DemoMode.screen == "security" { currentIndex = slides.count - 1 }
+            }
+            #endif
         }
     }
 }

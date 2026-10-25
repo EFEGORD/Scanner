@@ -10,9 +10,10 @@ struct LibraryView: View {
     @State private var showSettings = false
     @State private var showNewFolderPrompt = false
     @State private var newFolderName = ""
+    @State private var path: [ScanDocument] = []
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack(spacing: 0) {
                 header
                 if viewModel.hasAnyDocument {
@@ -38,6 +39,9 @@ struct LibraryView: View {
                 DocumentViewerView(document: document, onChange: { viewModel.load() })
             }
             .onAppear { viewModel.load() }
+            #if DEBUG
+            .task { openDemoScreen() }
+            #endif
             .fullScreenCover(isPresented: $showScanner, onDismiss: { viewModel.load() }) {
                 ScanCaptureView(onDone: {})
             }
@@ -226,6 +230,18 @@ struct LibraryView: View {
         }
         .padding(20)
     }
+
+    #if DEBUG
+    private func openDemoScreen() {
+        guard DemoMode.isActive else { return }
+        switch DemoMode.screen {
+        case "search": viewModel.searchQuery = DemoMode.searchQuery
+        case "viewer": if let lease = DemoMode.document(titled: DemoMode.leaseTitle) { path = [lease] }
+        case "combine": showCombine = true
+        default: break
+        }
+    }
+    #endif
 }
 
 private struct DocumentRowView: View {

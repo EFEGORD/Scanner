@@ -89,6 +89,21 @@ prueba de Google; Release, los de la cuenta (`project.yml`, app «UltraScanner»
 - Decisión de producto: no hay respaldo ni "exportar todo". Si se pierde el teléfono, se
   pierden los documentos.
 
+## Publicar en la App Store
+
+    scripts/screenshots.sh         # capturas 6.9" es/en con documentos ficticios (modo demo, solo Debug)
+    scripts/appstore-metadata.sh   # ficha, capturas, precio y disponibilidad (AppStore/metadata.json)
+    scripts/appstore-upload.sh     # pruebas, archivo Release y subida a TestFlight
+
+- El modo demo (`Demo/DemoMode.swift`, `-USDemo YES -USScreen library|search|viewer|combine|security`)
+  llena la biblioteca con documentos dibujados en la app y pasados por el OCR real. Solo existe
+  en Debug; `mac-appstore.sh` se detiene si aparece en el binario de Release.
+- La subida firma con el certificado «Apple Distribution» del llavero de la Mac y el perfil
+  «UltraScanner App Store» (`scripts/asc_profile.py`, vence 2027-10-16). Usa el agente de
+  UltraVocal (`mac-build.sh appstore <compilación>`); sin agente, pide la contraseña de sudo.
+- A mano en App Store Connect: etiqueta de privacidad (`AppStore/privacidad-app-store.md`),
+  elegir la compilación en la versión y enviarla a revisión.
+
 ## Pendiente
 
 - Capa de texto invisible "de verdad" en el PDF exportado (hoy va como anotación, `PDFGenerator`)
