@@ -20,7 +20,7 @@ final class EncryptionManager {
 
     /// AES-256 key, created once on first launch, never exported, never synced to iCloud.
     private static func loadOrCreateKey(account: String) -> SymmetricKey {
-        if let existing = try? KeychainHelper.load(service: service, account: account), let existing {
+        if let existing = try? KeychainHelper.load(service: service, account: account) {
             return SymmetricKey(data: existing)
         }
         let newKey = SymmetricKey(size: .bits256)
