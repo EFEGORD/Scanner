@@ -36,9 +36,7 @@ struct NewDocumentEditView: View {
     @ObservedObject var session: ScanSessionViewModel
     let onSaved: () -> Void
 
-    @State private var title: String = "Documento sin título"
-    @State private var goToExport = false
-    @State private var savedDocument: ScanDocument?
+    @State private var goToSave = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -59,31 +57,15 @@ struct NewDocumentEditView: View {
 
             Spacer()
 
-            if session.isProcessing {
-                ProgressView("Procesando y cifrando…")
-            } else {
-                Button("Guardar") { Task { await save() } }
-                    .buttonStyle(.primaryFilled)
-                    .padding(.horizontal)
-            }
+            Button("Siguiente") { goToSave = true }
+                .buttonStyle(.primaryFilled)
+                .padding(.horizontal)
         }
         .padding(.vertical)
-        .navigationTitle("Página \(1) de \(session.capturedImages.count)")
+        .navigationTitle("Editar")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $goToExport) {
-            if let savedDocument {
-                ExportView(document: savedDocument, onFinished: onSaved)
-            }
-        }
-    }
-
-    private func save() async {
-        do {
-            let document = try await session.saveAsDocument(title: title, folderId: nil)
-            savedDocument = document
-            goToExport = true
-        } catch {
-            print("No se pudo guardar el documento: \(error)")
+        .navigationDestination(isPresented: $goToSave) {
+            SaveDocumentView(session: session, onSaved: onSaved)
         }
     }
 }

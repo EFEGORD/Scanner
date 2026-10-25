@@ -26,12 +26,14 @@ final class AdManager: NSObject, GADFullScreenContentDelegate {
         }
     }
 
-    /// Call right before returning to the Biblioteca after "Guardar" or any share action.
-    func showIfReady(from viewController: UIViewController, completion: @escaping () -> Void) {
-        guard let interstitial else {
+    /// Called right after "Guardar" and right before opening the share sheet — never elsewhere.
+    func showIfReady(from viewController: UIViewController?, completion: @escaping () -> Void) {
+        guard let interstitial, let viewController else {
             completion() // no ad ready yet — never block the user's save/share on an ad
             return
         }
+        // Interstitials are single-use; the next one is preloaded when this one is dismissed.
+        self.interstitial = nil
         pendingCompletion = completion
         interstitial.present(fromRootViewController: viewController)
     }

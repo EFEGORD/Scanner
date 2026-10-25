@@ -31,15 +31,32 @@ struct ScannerApp: App {
 private struct LockScreenView: View {
     @StateObject private var appLock = AppLockManager.shared
 
+    // Matches Bloqueo.dc.html.
     var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "lock.shield.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.blue)
-            Text("Scanner está bloqueado")
-                .font(.headline)
-            Button("Desbloquear") { authenticate() }
-                .buttonStyle(.borderedProminent)
+        VStack(spacing: 0) {
+            Spacer()
+            VStack(spacing: 22) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 28)
+                        .fill(Color.accentColor.opacity(0.12))
+                        .frame(width: 112, height: 112)
+                    Image(systemName: "faceid")
+                        .font(.system(size: 52))
+                        .foregroundStyle(Color.accentColor)
+                }
+                VStack(spacing: 8) {
+                    Text("Scanner está bloqueado")
+                        .font(.title2.bold())
+                    Text("Usa Face ID para ver tus documentos.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            Button("Desbloquear con Face ID") { authenticate() }
+                .buttonStyle(.primaryFilled)
+                .padding(.horizontal, 28)
+                .padding(.bottom, 24)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.systemBackground))

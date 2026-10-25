@@ -21,9 +21,37 @@ final class DocumentRepository {
         }
     }
 
+    func document(id: String) throws -> ScanDocument? {
+        try dbQueue.read { db in try ScanDocument.fetchOne(db, key: id) }
+    }
+
+    func pages(of documentId: String) throws -> [ScanPage] {
+        try dbQueue.read { db in
+            try ScanPage
+                .filter(Column("document_id") == documentId)
+                .order(Column("position"))
+                .fetchAll(db)
+        }
+    }
+
+    /// Page count per document id, in one query (for the Biblioteca rows).
+    func pageCounts() throws -> [String: Int] {
+        try dbQueue.read { db in
+            let rows = try Row.fetchAll(db, sql: "SELECT document_id, COUNT(*) AS n FROM pages GROUP BY document_id")
+            var counts: [String: Int] = [:]
+            for row in rows {
+                let documentId: String = row["document_id"]
+                let count: Int = row["n"]
+                counts[documentId] = count
+            }
+            return counts
+        }
+    }
+
     func createDocument(title: String, folderId: String?, pages: [ScanPage]) throws -> ScanDocument {
         try dbQueue.write { db in
-            var document = ScanDocument(title: title, folderId: folderId)
+            let cover = pages.min(by: { $0.position < $1.position })?.thumbPath
+            let document = ScanDocument(title: title, folderId: folderId, thumbnailPath: cover)
             try document.insert(db)
             for page in pages {
                 var p = page
@@ -34,9 +62,34 @@ final class DocumentRepository {
         }
     }
 
+    func renameDocument(id: String, to title: String) throws {
+        try dbQueue.write { db in
+            guard var document = try ScanDocument.fetchOne(db, key: id) else { return }
+            document.title = title
+            document.updatedAt = Date()
+            try document.update(db)
+        }
+    }
+
+    func moveDocument(id: String, toFolder folderId: String?) throws {
+        try dbQueue.write { db in
+            guard var document = try ScanDocument.fetchOne(db, key: id) else { return }
+            document.folderId = folderId
+            document.updatedAt = Date()
+            try document.update(db)
+        }
+    }
+
+    /// Deletes the rows AND the encrypted image files — a deleted document must not leave
+    /// page images behind on disk.
     func deleteDocument(id: String) throws {
+        let pages = try self.pages(of: id)
         _ = try dbQueue.write { db in
             try ScanDocument.deleteOne(db, key: id)
+        }
+        for page in pages {
+            SecureFileStore.shared.delete(relativePath: page.imagePath)
+            SecureFileStore.shared.delete(relativePath: page.thumbPath)
         }
     }
 
@@ -46,13 +99,14 @@ final class DocumentRepository {
     func splitDocument(_ documentId: String, afterPosition: Int, newTitle: String) throws -> ScanDocument {
         try dbQueue.write { db in
             let original = try ScanDocument.fetchOne(db, key: documentId)!
-            var newDoc = ScanDocument(title: newTitle, folderId: original.folderId)
-            try newDoc.insert(db)
-
             let movingPages = try ScanPage
                 .filter(Column("document_id") == documentId && Column("position") > afterPosition)
                 .order(Column("position"))
                 .fetchAll(db)
+
+            let newDoc = ScanDocument(title: newTitle, folderId: original.folderId,
+                                      thumbnailPath: movingPages.first?.thumbPath)
+            try newDoc.insert(db)
 
             for (index, page) in movingPages.enumerated() {
                 var p = page
@@ -125,10 +179,15 @@ final class DocumentRepository {
 
     func createFolder(name: String) throws -> ScanFolder {
         try dbQueue.write { db in
-            var folder = ScanFolder(name: name)
+            let folder = ScanFolder(name: name)
             try folder.insert(db)
             return folder
         }
+    }
+
+    /// Documents in the folder are kept; the foreign key sets their folder_id to NULL.
+    func deleteFolder(id: String) throws {
+        _ = try dbQueue.write { db in try ScanFolder.deleteOne(db, key: id) }
     }
 
     // MARK: - Firma guardada

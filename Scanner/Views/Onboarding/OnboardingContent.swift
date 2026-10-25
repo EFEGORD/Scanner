@@ -19,7 +19,7 @@ struct OnboardingSlide: Identifiable {
         OnboardingSlide(
             id: 2, systemImage: "pencil.and.scribble",
             title: "Edita, firma y comparte al instante",
-            subtitle: "Ajusta filtros, agrega tu firma y comparte el PDF listo por WhatsApp, correo o cerca (AirDrop)."),
+            subtitle: "Ajusta filtros, agrega tu firma y comparte el PDF listo por WhatsApp, correo o AirDrop."),
         OnboardingSlide(
             id: 3, systemImage: "doc.text.magnifyingglass",
             title: "Encuentra cualquier documento al instante",

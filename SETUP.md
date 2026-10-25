@@ -64,26 +64,31 @@ después sin tocar el resto del código.
 
 ## 5. Qué ya está completo vs. qué es un primer borrador
 
-**Completo y funcional (en teoría — nunca compilado, revisar al primer build):**
-- Modelos (`Models/`), capa de base de datos + FTS5 (`Data/`)
+El código sigue el canvas de diseño "Flujo Scanner App" (19 pantallas).
+
+**Hecho:**
+- Modelos (`Models/`), base de datos + FTS5 (`Data/`)
 - Cifrado de archivos (imágenes/thumbnails) con AES-GCM + Keychain (`Security/`)
-- Bloqueo con Face ID (`Security/AppLockManager.swift`)
+- Bloqueo con Face ID (`Security/AppLockManager.swift`, pantalla en `App/ScannerApp.swift`)
 - Wrapper de VisionKit para escanear (`Scanning/`)
 - OCR multiidioma automático [idioma del teléfono + inglés] (`OCR/`)
-- Flujo de Onboarding (6 pantallas, dots, Omitir) (`Views/Onboarding/`)
-- Biblioteca con carpetas, lista de documentos, FAB de escanear (`Views/Library/`)
-- Captura → Revisión → Guardar (pipeline completo cámara→OCR→cifrado→BD)
+- Onboarding de 6 pantallas + permiso de cámara (`Views/Onboarding/`, `Views/Permissions/`)
+- Biblioteca: buscador visible por texto OCR, carpetas, estado vacío, botón Escanear
+  (`Views/Library/`)
+- Escanear → Revisar → Editar → Guardar (nombre sugerido por OCR, carpeta) → anuncio
+  (`Views/Scan/`, `Views/Review/`, `Views/Edit/`, `Views/Save/`)
+- Visor de documento: páginas, renombrar, mover a carpeta, eliminar (borra también los
+  archivos cifrados), dividir un documento guardado (`Views/Viewer/`)
+- Compartir PDF/JPG con el menú nativo de iOS; el archivo temporal se borra al cerrar el
+  menú (`Views/Share/`, `Export/ExportService.swift`)
+- Ajustes: Face ID, formato al compartir, carpetas, espacio usado, permiso de cámara
+  (`Views/Settings/`)
 
-**Primer borrador, falta terminar (funcional pero simplificado):**
-- `DocumentEditView` — falta: filtros (color/B&N/magia), rotar, recortar, firma (PencilKit)
-- `ExportView` — el share sheet real (`buildShareFile()`) está vacío: falta descifrar
-  páginas, generar el PDF con `PDFGenerator`, escribir el archivo temporal, y borrarlo
-  después de compartir
-- `CombineDocumentsView` — la búsqueda ya funciona; falta la bandeja de "páginas
-  agregadas" y el botón de guardar el documento combinado (usa
-  `DocumentRepository.mergePages`)
-- Pantalla de "Dividir en 2 documentos" dentro de un documento ya guardado (usa
-  `DocumentRepository.splitDocument`, aún no tiene UI)
+**Falta:**
+- `DocumentEditView` — filtros (color/B&N/magia), rotar, recortar, firma (PencilKit)
+- `CombineDocumentsView` — la búsqueda funciona; falta la bandeja de "páginas agregadas"
+  y guardar el documento combinado (usa `DocumentRepository.mergePages`)
+- Capa de texto invisible "de verdad" en el PDF (hoy va como anotación, ver `PDFGenerator`)
 
 Ninguna de estas piezas faltantes requiere red ni servidor — todo sigue siendo local.
 

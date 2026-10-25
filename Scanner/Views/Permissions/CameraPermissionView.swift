@@ -19,7 +19,7 @@ struct CameraPermissionView: View {
             VStack(spacing: 10) {
                 Text("Permite el acceso a la cámara")
                     .font(.title3.bold())
-                Text("La necesitamos para capturar tus documentos. Nunca se suben fotos sin tu permiso.")
+                Text("La usamos solo para escanear. Tus fotos nunca salen de tu teléfono.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
