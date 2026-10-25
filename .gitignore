@@ -2,5 +2,6 @@
 build/
 DerivedData/
 *.xcodeproj
-Scanner/Info.plist
+UltraScanner/Info.plist
 .swiftpm/
+AppStore/contacto.local.json

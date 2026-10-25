@@ -1,0 +1,50 @@
+{
+  "bundleId": "mx.com.claudita.ultrascanner",
+  "versionString": "1.0.0",
+  "copyright": "2026 Fernando Jimenez Gordillo",
+  "primaryCategory": "PRODUCTIVITY",
+  "secondaryCategory": "BUSINESS",
+  "containsAds": true,
+  "localizations": {
+    "es-MX": {
+      "name": "UltraScanner: PDF Scanner",
+      "subtitle": "Escanea y firma, sin la nube",
+      "promotionalText": "Escanea documentos a PDF, encuéntralos por su texto o por lo que son (INE, pasaporte, comprobante de domicilio) y fírmalos. Todo cifrado y solo en tu iPhone.",
+      "keywords": "escaner,escanear,documentos,ocr,firmar,ine,pasaporte,comprobante,domicilio,factura,cifrado",
+      "description": "UltraScanner convierte tu iPhone en un escáner de documentos privado. Todo se queda en tu teléfono: no hay cuentas, no hay nube y tus documentos se guardan cifrados.\n\nESCANEA\n• Detección automática de bordes y escaneo por lotes: varias páginas seguidas sin tocar la pantalla.\n• Revisa, reordena o elimina páginas antes de guardar.\n• Filtros: original, color, blanco y negro y Magia, que empareja la luz y hace el texto más nítido.\n\nENCUENTRA\n• Busca por el texto que viene dentro de tus documentos, no solo por el nombre.\n• UltraScanner reconoce qué documento es aunque no lo diga: escribe «INE» y aparecen las dos caras de tu credencial; escribe «pasaporte», «licencia» o «comprobante de domicilio» y aparecen esos documentos.\n• Reconoce documentos de México y Estados Unidos: INE, pasaporte, licencia de conducir, green card, Seguro Social, CURP, constancia del RFC, facturas CFDI, W-2, 1099, recibos de nómina, comprobantes de domicilio, estados de cuenta, contratos de arrendamiento y más.\n\nORGANIZA Y FIRMA\n• Carpetas para tus documentos.\n• Combina páginas de distintos documentos en uno nuevo —por ejemplo INE + comprobante de domicilio + contrato— sin modificar los originales.\n• Divide un documento en dos.\n• Firma con el dedo y guarda tu firma para la próxima vez.\n\nCOMPARTE\n• Exporta en PDF o JPG en máxima calidad y compártelo por WhatsApp, correo, AirDrop o la app que elijas.\n\nPRIVACIDAD\n• Tus documentos nunca salen de tu iPhone: no se suben a ningún servidor.\n• Se guardan cifrados y puedes proteger la app con Face ID.\n• Sin cuentas ni copia en la nube: si pierdes tu teléfono, tus documentos se pierden con él.\n\nANUNCIOS\nUltraScanner es gratis: verás un anuncio solo al compartir un documento. Nunca mientras escaneas ni al guardar."
+    },
+    "en-US": {
+      "name": "UltraScanner: PDF Scanner",
+      "subtitle": "Scan and sign, no cloud",
+      "promotionalText": "Scan documents to PDF, find them by their text or by what they are (ID, passport, proof of address) and sign them. Everything encrypted and only on your iPhone.",
+      "keywords": "scan,document,ocr,sign,signature,id,passport,license,receipt,invoice,proof of address,private",
+      "description": "UltraScanner turns your iPhone into a private document scanner. Everything stays on your phone: no accounts, no cloud, and your documents are stored encrypted.\n\nSCAN\n• Automatic edge detection and batch scanning: several pages in a row without touching the screen.\n• Review, reorder or delete pages before saving.\n• Filters: original, color, black and white, and Magic, which evens out the lighting and sharpens the text.\n\nFIND\n• Search the text inside your documents, not just their names.\n• UltraScanner recognizes what a document is even when it doesn't say so: type \"license\" and both sides of your driver license show up; type \"passport\", \"ID\" or \"proof of address\" and those documents appear.\n• It recognizes documents from the US and Mexico: driver licenses and state IDs, passports and passport cards, green cards, Social Security cards, W-2, W-9, 1099 and 1040 forms, pay stubs, utility bills, bank statements, leases, insurance cards, vehicle registrations, birth certificates and more.\n\nORGANIZE AND SIGN\n• Folders for your documents.\n• Combine pages from different documents into a new one — for example ID + proof of address + lease — without changing the originals.\n• Split a document in two.\n• Sign with your finger and save your signature for next time.\n\nSHARE\n• Export to PDF or JPG at full quality and share it via WhatsApp, Mail, AirDrop or any app you choose.\n\nPRIVACY\n• Your documents never leave your iPhone: nothing is uploaded to any server.\n• They're stored encrypted, and you can lock the app with Face ID.\n• No accounts and no cloud backup: if you lose your phone, your documents are gone with it.\n\nADS\nUltraScanner is free: you'll see an ad only when you share a document. Never while you scan or save."
+    },
+    "es-ES": {
+      "name": "UltraScanner: PDF Scanner",
+      "subtitle": "Escanea y firma, sin la nube",
+      "promotionalText": "Escanea documentos a PDF, encuéntralos por su texto o por lo que son, como tu pasaporte, y fírmalos. Todo cifrado y solo en tu iPhone.",
+      "keywords": "escaner,escanear,documentos,ocr,firmar,dni,pasaporte,recibo,factura,contrato,cifrado,privado",
+      "description": "UltraScanner convierte tu iPhone en un escáner de documentos privado. Todo se queda en tu teléfono: no hay cuentas, no hay nube y tus documentos se guardan cifrados.\n\nESCANEA\n• Detección automática de bordes y escaneo por lotes: varias páginas seguidas sin tocar la pantalla.\n• Revisa, reordena o elimina páginas antes de guardar.\n• Filtros: original, color, blanco y negro y Magia, que iguala la luz y hace el texto más nítido.\n\nENCUENTRA\n• Busca por el texto que viene dentro de tus documentos, no solo por el nombre.\n• UltraScanner reconoce qué documento es aunque no lo diga: escribe «pasaporte» y aparece la página de datos de tu pasaporte aunque no ponga esa palabra.\n• Reconoce pasaportes de cualquier país y documentos de México y Estados Unidos.\n\nORGANIZA Y FIRMA\n• Carpetas para tus documentos.\n• Combina páginas de distintos documentos en uno nuevo sin modificar los originales.\n• Divide un documento en dos.\n• Firma con el dedo y guarda tu firma para la próxima vez.\n\nCOMPARTE\n• Exporta en PDF o JPG en máxima calidad y compártelo por WhatsApp, correo, AirDrop o la app que elijas.\n\nPRIVACIDAD\n• Tus documentos nunca salen de tu iPhone: no se suben a ningún servidor.\n• Se guardan cifrados y puedes proteger la app con Face ID.\n• Sin cuentas ni copia en la nube: si pierdes tu móvil, tus documentos se pierden con él.\n\nANUNCIOS\nUltraScanner es gratis: verás un anuncio solo al compartir un documento. Nunca mientras escaneas ni al guardar."
+    },
+    "en-GB": {
+      "name": "UltraScanner: PDF Scanner",
+      "subtitle": "Scan and sign, no cloud",
+      "promotionalText": "Scan documents to PDF, find them by their text or by what they are, like your passport, and sign them. Everything encrypted and only on your iPhone.",
+      "keywords": "scan,document,ocr,sign,signature,id,passport,licence,receipt,invoice,bill,statement,private",
+      "description": "UltraScanner turns your iPhone into a private document scanner. Everything stays on your phone: no accounts, no cloud, and your documents are stored encrypted.\n\nSCAN\n• Automatic edge detection and batch scanning: several pages in a row without touching the screen.\n• Review, reorder or delete pages before saving.\n• Filters: original, colour, black and white, and Magic, which evens out the lighting and sharpens the text.\n\nFIND\n• Search the text inside your documents, not just their names.\n• UltraScanner recognises what a document is even when it doesn't say so: type \"passport\" and your passport's data page appears even if that word isn't on it.\n• It recognises passports from any country, and documents from the US and Mexico.\n\nORGANISE AND SIGN\n• Folders for your documents.\n• Combine pages from different documents into a new one without changing the originals.\n• Split a document in two.\n• Sign with your finger and save your signature for next time.\n\nSHARE\n• Export to PDF or JPG at full quality and share it via WhatsApp, Mail, AirDrop or any app you choose.\n\nPRIVACY\n• Your documents never leave your iPhone: nothing is uploaded to any server.\n• They're stored encrypted, and you can lock the app with Face ID.\n• No accounts and no cloud backup: if you lose your phone, your documents are gone with it.\n\nADS\nUltraScanner is free: you'll see an ad only when you share a document. Never while you scan or save."
+    }
+  },
+  "reviewNotes": "UltraScanner is a document scanner that works entirely on-device: no account and no server. Documents (images, recognized text and the search index) are stored encrypted on the device. To try it: go through or skip the intro, tap \"Escanear\" to scan a document with the camera (VisionKit), review and edit the pages, then save. Use the search field to find documents by their text or by type (for example \"passport\" or \"ID\"). An interstitial ad (Google AdMob) is shown only right before the share sheet opens, never while scanning or saving. The Face ID lock is on by default and can be turned off in Settings (Ajustes). The app's base language is Spanish and it is localized to English.",
+  "supportUrl": "https://ultratools.claudita.com.mx/ultrascanner/soporte",
+  "privacyPolicyUrl": "https://ultratools.claudita.com.mx/ultrascanner/privacidad",
+  "marketingUrl": "https://ultratools.claudita.com.mx/ultrascanner/",
+  "price": "free",
+  "excludeTerritories": ["CHN"],
+  "reviewContact": null,
+  "screenshots": "capturas",
+  "mediaFrom": {
+    "es-ES": "es-MX",
+    "en-GB": "en-US"
+  }
+}
