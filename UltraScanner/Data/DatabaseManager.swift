@@ -1,8 +1,12 @@
 import Foundation
 import GRDB
 
-/// Owns the single encrypted SQLite connection (SQLCipher) for the whole app.
-/// The database lives only inside the app sandbox — nothing here ever talks to a network.
+/// Owns the single SQLite connection for the whole app. The database lives only inside the
+/// app sandbox — nothing here ever talks to a network.
+///
+/// Release builds encrypt the whole file (titles, folders, OCR text and the search index) with
+/// SQLCipher, using a key that never leaves this device's Keychain, and keep it out of device
+/// backups. Debug builds leave it unencrypted so it can be inspected while developing.
 final class DatabaseManager {
     static let shared = DatabaseManager()
 
@@ -11,24 +15,32 @@ final class DatabaseManager {
     private init() {
         do {
             let fileURL = try Self.databaseURL()
-            let config = Configuration()
-
-            // NOTE — encryption TODO before shipping: GRDB's default Swift Package Manager
-            // build links the system sqlite3, which has no SQLCipher support, so
-            // `db.usePassphrase(...)` isn't available yet. For this first build we rely on
-            // iOS Data Protection (NSFileProtectionComplete, set right below) to keep the
-            // database encrypted at rest. To add the second, app-level layer described in
-            // the design conversation, follow "Cifrado de la base de datos (SQLCipher)" in
-            // SETUP.md, then uncomment a `prepareDatabase` block here that calls
-            // `db.usePassphrase(try EncryptionManager.shared.databasePassphrase())`.
-
-            dbQueue = try DatabaseQueue(path: fileURL.path, configuration: config)
+            #if DEBUG
+            if let plain = try? Self.open(fileURL, passphrase: nil) {
+                dbQueue = plain
+            } else {
+                // A Release build already encrypted this file on the same phone.
+                dbQueue = try Self.open(fileURL, passphrase: EncryptionManager.shared.databasePassphrase())
+            }
+            #else
+            let passphrase = try EncryptionManager.shared.databasePassphrase()
+            do {
+                try Self.encryptPlaintextDatabase(at: fileURL, passphrase: passphrase)
+            } catch {
+                // Never leave the app crashing at launch: keep using the file as it is and
+                // retry the move on the next launch.
+                print("No se pudo cifrar la base de datos existente: \(error)")
+            }
+            dbQueue = try (try? Self.open(fileURL, passphrase: passphrase)) ?? Self.open(fileURL, passphrase: nil)
+            #endif
             try Self.migrator.migrate(dbQueue)
             try Self.protectDatabaseFile(at: fileURL)
+            #if !DEBUG
+            try Self.excludeFromBackup(fileURL)
+            #endif
         } catch {
-            // A failure here means the encrypted store could not be opened or created.
             // There is no server fallback — surface it loudly rather than silently losing data.
-            fatalError("No se pudo abrir la base de datos cifrada: \(error)")
+            fatalError("No se pudo abrir la base de datos: \(error)")
         }
     }
 
@@ -38,12 +50,64 @@ final class DatabaseManager {
         return documentsURL.appendingPathComponent("scanner.sqlite")
     }
 
+    /// Opens the database, with the SQLCipher key when `passphrase` is given, and fails right
+    /// away (instead of on the first query) if the key doesn't match the file.
+    static func open(_ url: URL, passphrase: String?) throws -> DatabaseQueue {
+        var config = Configuration()
+        if let passphrase {
+            config.prepareDatabase { db in
+                try db.usePassphrase(passphrase)
+            }
+        }
+        let queue = try DatabaseQueue(path: url.path, configuration: config)
+        _ = try queue.read { db in try Int.fetchOne(db, sql: "SELECT count(*) FROM sqlite_master") }
+        return queue
+    }
+
+    /// One-time move of an unencrypted database (from an earlier version of the app) into an
+    /// encrypted one. Does nothing when the file is missing or already encrypted.
+    static func encryptPlaintextDatabase(at url: URL, passphrase: String) throws {
+        guard FileManager.default.fileExists(atPath: url.path),
+              let plain = try? open(url, passphrase: nil) else { return }
+        try plain.close()
+
+        let encryptedURL = url.deletingLastPathComponent().appendingPathComponent("scanner.encrypting.sqlite")
+        try? FileManager.default.removeItem(at: encryptedURL)
+        let encrypted = try open(encryptedURL, passphrase: passphrase)
+        try migrator.migrate(encrypted)
+        try encrypted.writeWithoutTransaction { db in
+            // KEY '' attaches the old file as plain SQLite.
+            try db.execute(sql: "ATTACH DATABASE ? AS plain KEY ''", arguments: [url.path])
+            try db.inTransaction {
+                // Parents before children (foreign keys). The search index is rebuilt instead of
+                // copied: its shadow tables are internal to FTS5.
+                for table in ["folders", "documents", "tags", "pages", "document_tags",
+                              "saved_signatures", "page_annotations", "settings"] {
+                    try db.execute(sql: "INSERT INTO main.\(table) SELECT * FROM plain.\(table)")
+                }
+                try db.execute(sql: "INSERT INTO pages_fts(pages_fts) VALUES('rebuild')")
+                return .commit
+            }
+            try db.execute(sql: "DETACH DATABASE plain")
+        }
+        try encrypted.close()
+        _ = try FileManager.default.replaceItemAt(url, withItemAt: encryptedURL)
+    }
+
     private static func protectDatabaseFile(at url: URL) throws {
         try FileManager.default.setAttributes(
             [.protectionKey: FileProtectionType.completeUnlessOpen], ofItemAtPath: url.path)
     }
 
-    private static var migrator: DatabaseMigrator {
+    /// Product decision: no backups. If the phone is lost, the documents are lost too.
+    static func excludeFromBackup(_ url: URL) throws {
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        var url = url
+        try url.setResourceValues(values)
+    }
+
+    static var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
 
         migrator.registerMigration("v1_initial") { db in

@@ -14,6 +14,11 @@ final class SecureFileStore {
             for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         rootURL = documents.appendingPathComponent("pages", isDirectory: true)
         try? FileManager.default.createDirectory(at: rootURL, withIntermediateDirectories: true)
+        #if !DEBUG
+        // Product decision: no backups. (The images are encrypted with a key that never leaves
+        // this phone, so a backup of them would be unreadable anyway.)
+        try? DatabaseManager.excludeFromBackup(rootURL)
+        #endif
     }
 
     /// Returns a path (relative, stored in the DB) for a brand-new encrypted file.

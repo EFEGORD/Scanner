@@ -51,9 +51,11 @@ targets:
         DEVELOPMENT_TEAM: C6XD8H2J47
 
 packages:
+  # Fork de GRDB mantenido por SQLCipher (mismo API, con cifrado). La llave solo se usa en
+  # Release; ver DatabaseManager.
   GRDB:
-    url: https://github.com/groue/GRDB.swift
-    from: 6.29.0
+    url: https://github.com/sqlcipher/GRDB.swift
+    from: 7.11.1
   GoogleMobileAds:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads
     from: 11.0.0

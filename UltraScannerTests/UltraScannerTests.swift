@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import GRDB
 @testable import UltraScanner
 
 // MARK: - Helpers
@@ -40,6 +41,87 @@ private func brightness(of image: UIImage, at point: CGPoint) -> CGFloat {
     context.draw(cgImage, in: CGRect(x: -point.x, y: -(CGFloat(cgImage.height) - point.y - 1),
                                      width: CGFloat(cgImage.width), height: CGFloat(cgImage.height)))
     return (CGFloat(pixel[0]) + CGFloat(pixel[1]) + CGFloat(pixel[2])) / (3 * 255)
+}
+
+// MARK: - Cifrado de la base de datos (lo que hace la versión Release)
+
+final class DatabaseEncryptionTests: XCTestCase {
+    private var directory: URL!
+    private let secret = "CONFIDENCIALXYZ"
+
+    override func setUpWithError() throws {
+        directory = FileManager.default.temporaryDirectory.appendingPathComponent("db-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    }
+
+    override func tearDownWithError() throws {
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    private func insertSampleDocument(into queue: DatabaseQueue) throws {
+        try queue.write { db in
+            let folder = ScanFolder(name: "Personal")
+            try folder.insert(db)
+            let document = ScanDocument(title: "Credencial", folderId: folder.id)
+            try document.insert(db)
+            try ScanPage(documentId: document.id, position: 0, imagePath: "a.jpg", thumbPath: "b.jpg",
+                         ocrText: "nombre \(secret) domicilio").insert(db)
+        }
+    }
+
+    private func fileContainsSecret(_ url: URL) throws -> Bool {
+        try Data(contentsOf: url).range(of: Data(secret.utf8)) != nil
+    }
+
+    func testPlaintextDatabaseIsMovedToAnEncryptedOne() throws {
+        let url = directory.appendingPathComponent("scanner.sqlite")
+        // Like the database an earlier version of the app left on the phone.
+        let plain = try DatabaseManager.open(url, passphrase: nil)
+        try DatabaseManager.migrator.migrate(plain)
+        try insertSampleDocument(into: plain)
+        try plain.close()
+        XCTAssertTrue(try fileContainsSecret(url), "sin cifrar, el texto se lee directo del archivo")
+
+        try DatabaseManager.encryptPlaintextDatabase(at: url, passphrase: "clave-de-prueba")
+
+        XCTAssertFalse(try fileContainsSecret(url))
+        XCTAssertThrowsError(try DatabaseManager.open(url, passphrase: nil))
+        XCTAssertThrowsError(try DatabaseManager.open(url, passphrase: "otra-clave"))
+
+        let encrypted = try DatabaseManager.open(url, passphrase: "clave-de-prueba")
+        try encrypted.read { db in
+            XCTAssertEqual(try ScanDocument.fetchCount(db), 1)
+            XCTAssertEqual(try ScanPage.fetchCount(db), 1)
+            XCTAssertEqual(try ScanFolder.fetchOne(db)?.name, "Personal")
+            let hits = try Int.fetchOne(db, sql: """
+                SELECT count(*) FROM pages_fts JOIN pages ON pages.rowid = pages_fts.rowid
+                WHERE pages_fts MATCH ?
+                """, arguments: ["\"confidencial\"*"])
+            XCTAssertEqual(hits, 1, "el buscador sigue funcionando después de cifrar")
+        }
+        try encrypted.close()
+
+        // A second run (file already encrypted) leaves it as it is.
+        try DatabaseManager.encryptPlaintextDatabase(at: url, passphrase: "clave-de-prueba")
+        XCTAssertNoThrow(try DatabaseManager.open(url, passphrase: "clave-de-prueba").close())
+    }
+
+    func testNewEncryptedDatabaseNeverHoldsReadableText() throws {
+        let url = directory.appendingPathComponent("nueva.sqlite")
+        let queue = try DatabaseManager.open(url, passphrase: "clave-de-prueba")
+        try DatabaseManager.migrator.migrate(queue)
+        try insertSampleDocument(into: queue)
+        try queue.close()
+
+        XCTAssertFalse(try fileContainsSecret(url))
+        XCTAssertThrowsError(try DatabaseManager.open(url, passphrase: nil))
+    }
+
+    func testMissingDatabaseIsLeftAlone() throws {
+        let url = directory.appendingPathComponent("no-existe.sqlite")
+        try DatabaseManager.encryptPlaintextDatabase(at: url, passphrase: "clave-de-prueba")
+        XCTAssertFalse(FileManager.default.fileExists(atPath: url.path))
+    }
 }
 
 // MARK: - Búsqueda: lo que escribe el usuario → consulta FTS5

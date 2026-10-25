@@ -44,16 +44,17 @@ la contraseña de sudo de la Mac. Firma con la llave de App Store Connect
 
 - Imágenes de las páginas y firma: AES-GCM (CryptoKit) con una llave en el Keychain
   (`kSecAttrAccessibleWhenUnlockedThisDeviceOnly`) + protección de archivos de iOS.
-- Base de datos (títulos, carpetas, texto OCR): **solo** protección de archivos de iOS por ahora.
-  Pendiente: SQLCipher (la llave ya existe: `EncryptionManager.databasePassphrase()`) y
-  excluir los datos de las copias de seguridad. Sin eso, el texto de los documentos queda
-  legible en un respaldo sin contraseña.
+- Base de datos (títulos, carpetas, texto OCR e índice del buscador): en **Release** va cifrada
+  completa con SQLCipher (fork `sqlcipher/GRDB.swift`), con una llave del Keychain que no sale
+  del teléfono, y los datos se excluyen de los respaldos. Una base sin cifrar de una versión
+  anterior se migra sola al primer arranque (`DatabaseManager.encryptPlaintextDatabase`).
+- En **Debug** la base de datos queda sin cifrar a propósito, para poder revisarla al depurar
+  (si el teléfono ya tiene una cifrada por Release, Debug la abre con la llave).
 - Decisión de producto: no hay respaldo ni "exportar todo". Si se pierde el teléfono, se
   pierden los documentos.
 
 ## Pendiente
 
-- SQLCipher + excluir de respaldos (ver Seguridad)
 - Capa de texto invisible "de verdad" en el PDF exportado (hoy va como anotación, `PDFGenerator`)
 - ID real de AdMob (hoy usa el de prueba de Google) y consentimiento de anuncios (UMP) para la UE
 - Identificador para el App Store: hoy `com.efegord.scanner`; definirlo antes de publicar
