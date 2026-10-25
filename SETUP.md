@@ -1,8 +1,7 @@
 # UltraScanner
 
 App de escaneo de documentos para iOS (Swift/SwiftUI), 100% local: nada sale del teléfono,
-todo se guarda cifrado, sin cuentas ni premium (un anuncio intersticial al guardar y al
-compartir). El diseño de las pantallas vive en el canvas "Flujo Scanner App".
+todo se guarda cifrado, sin cuentas ni premium (un anuncio intersticial solo al compartir). El diseño de las pantallas vive en el canvas "Flujo Scanner App".
 
 ## Compilar e instalar (desde Windows, Git Bash)
 

@@ -95,6 +95,7 @@ struct PageEditorView: View {
                     }
                 }
                 .frame(width: size.width, height: size.height)
+                .coordinateSpace(.named(SignatureOverlay.pageSpace))
                 .shadow(color: .black.opacity(0.5), radius: 16, y: 8)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
             } else {
@@ -196,19 +197,26 @@ struct PageEditorView: View {
 }
 
 /// A signature on the page: drag to move, pinch to resize, ✕ to remove.
+///
+/// While a finger is down, the movement lives only in this view's state and is written to the
+/// page once, on release. The drag is measured in the page's coordinate space: measured
+/// against the signature itself, the reference would move with every update and the
+/// signature would jitter back and forth.
 private struct SignatureOverlay: View {
+    static let pageSpace = "signature-page"
+
     @Binding var signature: PlacedSignature
     let pageSize: CGSize
     let onDelete: () -> Void
 
-    @State private var dragStart: CGPoint?
-    @State private var widthStart: CGFloat?
+    @State private var dragOffset: CGSize = .zero
+    @State private var liveScale: CGFloat = 1
 
     var body: some View {
-        let frame = signature.frame(in: pageSize)
+        let base = signature.frame(in: pageSize)
         Image(uiImage: signature.image)
             .resizable()
-            .frame(width: frame.width, height: frame.height)
+            .frame(width: base.width * liveScale, height: base.height * liveScale)
             .overlay(
                 RoundedRectangle(cornerRadius: 4)
                     .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 1.5, dash: [5]))
@@ -223,25 +231,40 @@ private struct SignatureOverlay: View {
                 .accessibilityLabel("Quitar firma")
             }
             .gesture(
-                DragGesture()
+                DragGesture(coordinateSpace: .named(Self.pageSpace))
                     .onChanged { value in
-                        let start = dragStart ?? signature.center
-                        if dragStart == nil { dragStart = start }
-                        signature.center = CGPoint(
-                            x: min(max(start.x + value.translation.width / pageSize.width, 0), 1),
-                            y: min(max(start.y + value.translation.height / pageSize.height, 0), 1))
+                        dragOffset = clampedOffset(value.translation, from: base)
                     }
-                    .onEnded { _ in dragStart = nil }
+                    .onEnded { value in
+                        let offset = clampedOffset(value.translation, from: base)
+                        signature.center = CGPoint(x: (base.midX + offset.width) / pageSize.width,
+                                                   y: (base.midY + offset.height) / pageSize.height)
+                        dragOffset = .zero
+                    }
             )
             .simultaneousGesture(
                 MagnificationGesture()
                     .onChanged { scale in
-                        let start = widthStart ?? signature.widthFraction
-                        if widthStart == nil { widthStart = start }
-                        signature.widthFraction = min(max(start * scale, 0.1), 0.9)
+                        liveScale = clampedScale(scale)
                     }
-                    .onEnded { _ in widthStart = nil }
+                    .onEnded { scale in
+                        signature.widthFraction *= clampedScale(scale)
+                        liveScale = 1
+                    }
             )
-            .position(x: frame.midX, y: frame.midY)
+            .position(x: base.midX + dragOffset.width, y: base.midY + dragOffset.height)
+    }
+
+    /// Keeps the signature's center on the page.
+    private func clampedOffset(_ translation: CGSize, from base: CGRect) -> CGSize {
+        let x = min(max(base.midX + translation.width, 0), pageSize.width)
+        let y = min(max(base.midY + translation.height, 0), pageSize.height)
+        return CGSize(width: x - base.midX, height: y - base.midY)
+    }
+
+    /// Between 10% and 90% of the page width.
+    private func clampedScale(_ scale: CGFloat) -> CGFloat {
+        let width = min(max(signature.widthFraction * scale, 0.1), 0.9)
+        return width / signature.widthFraction
     }
 }

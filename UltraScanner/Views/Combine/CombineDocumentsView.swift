@@ -297,9 +297,7 @@ private struct CombineSaveView: View {
         do {
             _ = try await viewModel.save(title: trimmed.isEmpty ? "Documento combinado" : trimmed,
                                          folderId: selectedFolderId)
-            AdManager.shared.showIfReady(from: UIApplication.topViewController()) {
-                onSaved()
-            }
+            onSaved()
         } catch {
             errorMessage = "No se pudo guardar el documento combinado."
         }

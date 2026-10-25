@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Matches Exportar.dc.html ("Guardar documento"): the ONE place a new scan gets saved.
 /// Name (suggested from the first OCR line), folder, then "Guardar" → render edits + OCR +
-/// encryption + database, then the interstitial ad, then back to the Biblioteca.
+/// encryption + database, then back to the Biblioteca (no ad here: only sharing shows one).
 struct SaveDocumentView: View {
     @ObservedObject var session: ScanSessionViewModel
     let onSaved: () -> Void
@@ -95,9 +95,7 @@ struct SaveDocumentView: View {
             _ = try await session.saveAsDocument(
                 title: trimmed.isEmpty ? "Documento sin título" : trimmed,
                 folderId: selectedFolderId)
-            AdManager.shared.showIfReady(from: UIApplication.topViewController()) {
-                onSaved()
-            }
+            onSaved()
         } catch {
             errorMessage = "No se pudo guardar el documento."
         }

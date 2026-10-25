@@ -2,8 +2,8 @@ import Foundation
 import GoogleMobileAds
 import UIKit
 
-/// Shows the interstitial ad that appears right when the user saves or shares a finished
-/// scan (never anywhere else — see Anuncio.dc.html in the design canvas for the UX).
+/// Shows the interstitial ad right before the share sheet opens — the only place it appears
+/// (saving a document shows no ad; see Anuncio.dc.html in the design canvas).
 /// The app has no premium tier: this is the only monetization.
 final class AdManager: NSObject, GADFullScreenContentDelegate {
     static let shared = AdManager()
@@ -26,7 +26,7 @@ final class AdManager: NSObject, GADFullScreenContentDelegate {
         }
     }
 
-    /// Called right after "Guardar" and right before opening the share sheet — never elsewhere.
+    /// Called right before opening the share sheet — never elsewhere.
     func showIfReady(from viewController: UIViewController?, completion: @escaping () -> Void) {
         guard let interstitial, let viewController else {
             completion() // no ad ready yet — never block the user's save/share on an ad
