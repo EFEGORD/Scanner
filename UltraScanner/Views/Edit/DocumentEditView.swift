@@ -82,6 +82,11 @@ struct DocumentEditView: View {
                     source, with: fresh,
                     filter: state.filter, rotation: (source.rotation + (state.quarterTurns % 4) * 90) % 360)
             }
+            let edited = pages.filter(\.hasEdits)
+            if !edited.isEmpty {
+                AppAnalytics.log(.documentEdited, ["pages": edited.count,
+                                                   "signed": edited.contains { !$0.signatures.isEmpty } ? 1 : 0])
+            }
             onSaved()
             dismiss()
         } catch {

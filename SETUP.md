@@ -76,6 +76,20 @@ consentimiento se pide la primera vez que se comparte, no al abrir la app. Debug
 prueba de Google; Release, los de la cuenta (`project.yml`, app «UltraScanner», bloque
 «Compartir documento»).
 
+## Estadísticas de uso (Firebase Analytics)
+
+`Analytics/AppAnalytics.swift` manda a Firebase solo qué funciones se usan (escaneo guardado y
+cuántas páginas, edición, compartir y formato, combinar, dividir, búsqueda usada, carpeta creada,
+fin del tutorial, bloqueo con Face ID). Nunca títulos, texto de los documentos, palabras buscadas
+ni nombres de carpetas. Respeta el mismo formulario de consentimiento de Google que los anuncios
+(modo de consentimiento: negado hasta saber; ver `project.yml`).
+
+- Necesita `UltraScanner/GoogleService-Info.plist` (consola de Firebase › proyecto › app de iOS
+  `mx.com.claudita.ultrascanner`). **No está en git**: cópialo a mano en un clon nuevo. Sin él la
+  app funciona pero no manda nada, y `mac-appstore.sh` no deja subirla.
+- En Debug no manda nada salvo con `-USAnalytics YES` (y nunca en el modo demo). Para ver los
+  eventos en vivo: `-USAnalytics YES -FIRDebugEnabled` y Firebase › DebugView.
+
 ## Seguridad
 
 - Imágenes de las páginas y firma: AES-GCM (CryptoKit) con una llave en el Keychain

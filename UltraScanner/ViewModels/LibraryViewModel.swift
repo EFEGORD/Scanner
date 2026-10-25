@@ -7,7 +7,13 @@ final class LibraryViewModel: ObservableObject {
     @Published var pageCounts: [String: Int] = [:]
     @Published var selectedFolderId: String?
     @Published var searchQuery: String = "" {
-        didSet { runSearch() }
+        didSet {
+            // Once per search, without the words: they never leave the phone.
+            if oldValue.trimmingCharacters(in: .whitespaces).isEmpty && isSearching {
+                AppAnalytics.log(.searchUsed)
+            }
+            runSearch()
+        }
     }
     @Published var searchResults: [DocumentRepository.SearchHit] = []
     /// False only when the user has never saved a document — drives the empty state.

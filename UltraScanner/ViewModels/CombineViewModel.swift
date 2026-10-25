@@ -126,6 +126,8 @@ final class CombineViewModel: ObservableObject {
             }
         }
         let document = try repository.createDocument(title: title, folderId: folderId, pages: pages)
+        let scanned = tray.filter { $0.pageId == nil }.count
+        AppAnalytics.log(.documentsCombined, ["pages": pages.count, "scanned_pages": scanned])
         tray = []
         return document
     }

@@ -117,6 +117,15 @@ final class DatabaseEncryptionTests: XCTestCase {
         XCTAssertThrowsError(try DatabaseManager.open(url, passphrase: nil))
     }
 
+    /// Firebase Analytics links the system SQLite too; if it wins the link, nothing is encrypted
+    /// (see OTHER_LDFLAGS in project.yml).
+    func testSQLiteIsSQLCipher() throws {
+        let queue = try DatabaseManager.open(directory.appendingPathComponent("version.sqlite"), passphrase: nil)
+        let version = try queue.read { db in try String.fetchOne(db, sql: "PRAGMA cipher_version") }
+        XCTAssertNotNil(version, "el SQLite de la app no es SQLCipher")
+        try queue.close()
+    }
+
     func testMissingDatabaseIsLeftAlone() throws {
         let url = directory.appendingPathComponent("no-existe.sqlite")
         try DatabaseManager.encryptPlaintextDatabase(at: url, passphrase: "clave-de-prueba")

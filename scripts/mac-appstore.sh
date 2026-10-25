@@ -55,7 +55,10 @@ if strings "$APP/UltraScanner" | grep -q "USScreen"; then
 fi
 [ -f "$APP/PrivacyInfo.xcprivacy" ] || { echo "ALTO: falta PrivacyInfo.xcprivacy." >&2; exit 1; }
 [ -d "$APP/en.lproj" ] || { echo "ALTO: falta la traducción al inglés (en.lproj)." >&2; exit 1; }
-echo "    OK: $BUNDLE_ID $(plist CFBundleShortVersionString) ($(plist CFBundleVersion)), AdMob de la cuenta, sin modo demo, con inglés."
+# Sin este archivo Firebase Analytics no arranca (no está en git: ver SETUP.md).
+FIREBASE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" "$APP/GoogleService-Info.plist" 2>/dev/null || true)
+[ "$FIREBASE_ID" = "$BUNDLE_ID" ] || { echo "ALTO: falta UltraScanner/GoogleService-Info.plist de Firebase (o es de otra app: $FIREBASE_ID)." >&2; exit 1; }
+echo "    OK: $BUNDLE_ID $(plist CFBundleShortVersionString) ($(plist CFBundleVersion)), AdMob de la cuenta, Firebase, sin modo demo, con inglés."
 
 cat > "$OUT/ExportOptions.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>

@@ -9,6 +9,10 @@ struct UltraScannerApp: App {
     @State private var demoReady = !DemoMode.isActive
     #endif
 
+    init() {
+        AppAnalytics.start()
+    }
+
     var body: some Scene {
         WindowGroup {
             #if DEBUG
@@ -36,6 +40,7 @@ struct UltraScannerApp: App {
             } else {
                 OnboardingFlowView(onFinished: {
                     hasCompletedOnboarding = true
+                    AppAnalytics.log(.onboardingFinished)
                     // The user just went through setup; don't ask for Face ID right away.
                     appLock.markUnlocked()
                 })

@@ -190,11 +190,14 @@ final class DocumentRepository {
     }
 
     func createFolder(name: String) throws -> ScanFolder {
-        try dbQueue.write { db in
+        let folder = try dbQueue.write { db in
             let folder = ScanFolder(name: name)
             try folder.insert(db)
             return folder
         }
+        // Folders are created from three screens; the name never leaves the phone.
+        AppAnalytics.log(.folderCreated)
+        return folder
     }
 
     /// Documents in the folder are kept; the foreign key sets their folder_id to NULL.

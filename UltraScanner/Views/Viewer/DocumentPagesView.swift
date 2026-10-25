@@ -67,8 +67,10 @@ struct DocumentPagesView: View {
     }
 
     private func split(after page: ScanPage) {
-        _ = try? DocumentRepository.shared.splitDocument(
-            document.id, afterPosition: page.position, newTitle: String(localized: "\(document.title) (parte 2)"))
+        if (try? DocumentRepository.shared.splitDocument(
+            document.id, afterPosition: page.position, newTitle: String(localized: "\(document.title) (parte 2)"))) != nil {
+            AppAnalytics.log(.documentSplit)
+        }
         load()
         onChange()
     }

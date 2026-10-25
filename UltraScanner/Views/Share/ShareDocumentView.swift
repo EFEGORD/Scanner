@@ -67,7 +67,10 @@ struct ShareDocumentView: View {
             do {
                 let urls = try ExportService.makeShareFiles(for: document, format: format)
                 let activity = UIActivityViewController(activityItems: urls, applicationActivities: nil)
-                activity.completionWithItemsHandler = { _, _, _, _ in
+                activity.completionWithItemsHandler = { _, completed, _, _ in
+                    if completed {
+                        AppAnalytics.log(.documentShared, ["format": format.rawValue])
+                    }
                     ExportService.cleanUp(urls)
                     dismiss()
                 }

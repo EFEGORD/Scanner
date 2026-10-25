@@ -15,6 +15,9 @@ struct SettingsView: View {
             List {
                 Section("Seguridad") {
                     Toggle("Bloquear con Face ID", isOn: $appLockEnabled)
+                        .onChange(of: appLockEnabled) { _, enabled in
+                            AppAnalytics.log(.faceIDLockChanged, ["enabled": enabled ? 1 : 0])
+                        }
                 }
 
                 Section("Documentos") {

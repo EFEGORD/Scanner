@@ -38,6 +38,8 @@ final class ScanSessionViewModel: ObservableObject {
         }
 
         let document = try DocumentRepository.shared.createDocument(title: title, folderId: folderId, pages: scanPages)
+        AppAnalytics.log(.scanSaved, ["pages": scanPages.count,
+                                      "signed": pages.contains { !$0.signatures.isEmpty } ? 1 : 0])
         pages = []
         return document
     }

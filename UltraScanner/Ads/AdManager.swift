@@ -95,6 +95,7 @@ final class AdManager: NSObject, FullScreenContentDelegate {
         if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
             _ = await ATTrackingManager.requestTrackingAuthorization()
         }
+        await AppAnalytics.updateConsent()
         return info.canRequestAds
     }
 }

@@ -42,11 +42,22 @@ targets:
         # Apple, solo para proteger los datos del propio usuario en el iPhone. No hace falta
         # documentación de exportación.
         ITSAppUsesNonExemptEncryption: false
+        # Firebase Analytics (Analytics/AppAnalytics.swift): apagado hasta que la app lo arranca, y
+        # con almacenamiento negado hasta que se sabe el consentimiento (formulario de Google).
+        FIREBASE_ANALYTICS_COLLECTION_ENABLED: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_ANALYTICS_STORAGE: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_STORAGE: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_USER_DATA: false
+        GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: mx.com.claudita.ultrascanner
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
+        # SQLCipher primero: Firebase Analytics enlaza el SQLite del sistema (libsqlite3) y, si gana
+        # ese, la base de datos deja de abrirse y de cifrarse. Lo revisa testSQLiteIsSQLCipher.
+        # -ObjC lo pide Firebase Analytics.
+        OTHER_LDFLAGS: $(inherited) -framework SQLCipher -ObjC
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: C6XD8H2J47  # Fernando Jimenez Gordillo (Apple Developer Program)
         # Debug usa los IDs de prueba de Google (anuncios de ejemplo); Release, los de la cuenta.
@@ -64,6 +75,8 @@ targets:
         product: GoogleMobileAds
       - package: UserMessagingPlatform
         product: GoogleUserMessagingPlatform
+      - package: Firebase
+        product: FirebaseAnalytics
     scheme:
       testTargets:
         - UltraScannerTests
@@ -93,3 +106,7 @@ packages:
   UserMessagingPlatform:
     url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
     from: 3.0.0
+  # Uso de la app, sin contenido de los documentos (Analytics/AppAnalytics.swift).
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk
+    from: 12.0.0
