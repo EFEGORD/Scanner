@@ -53,6 +53,20 @@ Los textos armados en código van con `String(localized:)`; en las vistas, los l
     scripts/deploy-ios.sh sim
     scripts/check-strings.sh      # lista los que faltan en el catálogo y los que ya no se usan
 
+## Sitio web (UltraTools)
+
+https://ultratools.claudita.com.mx agrupa las apps: portada, `/ultrascanner/` (inicio, `soporte`
+y `privacidad`, las URLs de la ficha del App Store) y `/app-ads.txt` de AdMob. Corre en el
+nginx con Docker de la Mac mini (`~/Documents/NGINX`), con certificado de Let's Encrypt que
+renueva el contenedor `certbot`. `/ultravocal/` sirve la carpeta del sitio de UltraVocal tal
+cual; `ultravocal.claudita.com.mx` sigue igual. El registro DNS lo mantiene el contenedor
+`cloudflare-ddns` (lista `DOMAINS` de `~/Documents/NGINX/cloudflare/docker-compose.yml`).
+
+- Páginas: `web/ultratools/`. Para publicarlas: `scripts/site-deploy.sh`.
+- Configuración de nginx: `web/nginx/ultratools.claudita.com.mx.conf` (se copió a mano a
+  `~/Documents/NGINX/nginx/conf.d/`; si cambia, cópiala y recarga con
+  `docker exec nginx nginx -t && docker exec nginx nginx -s reload`).
+
 ## Anuncios
 
 AdMob 12 + formulario de consentimiento de Google (UMP) + aviso de rastreo de Apple, igual que
