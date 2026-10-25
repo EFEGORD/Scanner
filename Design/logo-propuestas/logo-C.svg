@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="linear-gradient-1" x1="162.297" y1="-93.703" x2="861.703" y2="1117.703" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2a0f35"/>
+      <stop offset="1" stop-color="#5a1542"/>
+    </linearGradient>
+    <filter id="filter-1" filterUnits="userSpaceOnUse" x="165" y="165" width="304" height="304" data-vc-blend="screen" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="13" result="glow"/><feFlood flood-color="#ff7a59" flood-opacity="0.55"/><feComposite in2="glow" operator="in" result="paint"/><feMerge><feMergeNode in="paint"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="linear-gradient-2" x1="206" y1="206" x2="428" y2="428" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff4f8b"/>
+    </linearGradient>
+    <filter id="filter-2" filterUnits="userSpaceOnUse" x="555" y="165" width="304" height="304" data-vc-blend="screen" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="13" result="glow"/><feFlood flood-color="#ff7a59" flood-opacity="0.55"/><feComposite in2="glow" operator="in" result="paint"/><feMerge><feMergeNode in="paint"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="linear-gradient-3" x1="596" y1="206" x2="818" y2="428" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff4f8b"/>
+    </linearGradient>
+    <filter id="filter-3" filterUnits="userSpaceOnUse" x="555" y="555" width="304" height="304" data-vc-blend="screen" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="13" result="glow"/><feFlood flood-color="#ff7a59" flood-opacity="0.55"/><feComposite in2="glow" operator="in" result="paint"/><feMerge><feMergeNode in="paint"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="linear-gradient-4" x1="596" y1="596" x2="818" y2="818" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff4f8b"/>
+    </linearGradient>
+    <filter id="filter-4" filterUnits="userSpaceOnUse" x="165" y="555" width="304" height="304" data-vc-blend="screen" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="13" result="glow"/><feFlood flood-color="#ff7a59" flood-opacity="0.55"/><feComposite in2="glow" operator="in" result="paint"/><feMerge><feMergeNode in="paint"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="linear-gradient-5" x1="206" y1="596" x2="428" y2="818" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb347"/>
+      <stop offset="1" stop-color="#ff4f8b"/>
+    </linearGradient>
+    <filter id="filter-5" filterUnits="userSpaceOnUse" x="403" y="403" width="218" height="218" data-vc-blend="screen" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="15" result="glow"/><feFlood flood-color="#ff4f8b" flood-opacity="0.6"/><feComposite in2="glow" operator="in" result="paint"/><feMerge><feMergeNode in="paint"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="linear-gradient-6" x1="512" y1="450" x2="512" y2="574" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff8aa8"/>
+      <stop offset="1" stop-color="#ff4f8b"/>
+    </linearGradient>
+  </defs>
+  <title>Untitled-1</title>
+  <g id="Layer_1" data-name="Layer 1">
+    <path d="M0 0 L1024 0 L1024 1024 L0 1024 Z" fill="url(#linear-gradient-1)"/>
+    <g filter="url(#filter-1)">
+      <path d="M232 402 L232 312 C232 268 268 232 312 232 L402 232" fill="none" stroke="url(#linear-gradient-2)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g filter="url(#filter-2)">
+      <path d="M622 232 L712 232 C756 232 792 268 792 312 L792 402" fill="none" stroke="url(#linear-gradient-3)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g filter="url(#filter-3)">
+      <path d="M792 622 L792 712 C792 756 756 792 712 792 L622 792" fill="none" stroke="url(#linear-gradient-4)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g filter="url(#filter-4)">
+      <path d="M402 792 L312 792 C268 792 232 756 232 712 L232 622" fill="none" stroke="url(#linear-gradient-5)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g filter="url(#filter-5)">
+      <path d="M450 512 C450 477.758 477.758 450 512 450 C546.242 450 574 477.758 574 512 C574 546.242 546.242 574 512 574 C477.758 574 450 546.242 450 512 Z" fill="url(#linear-gradient-6)"/>
+    </g>
+  </g>
+</svg>

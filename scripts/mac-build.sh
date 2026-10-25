@@ -3,12 +3,12 @@
 # través del agente de UltraVocal). Firma con la llave de API de App Store Connect, así que no
 # necesita una cuenta iniciada en Xcode → Settings → Accounts.
 #
-#   mac-build.sh <Release|Debug> <UDID del iPhone> [Scanner]
+#   mac-build.sh <Release|Debug> <UDID del iPhone> [UltraScanner]
 set -euo pipefail
 
 CONFIG="$1"
 DEVICE="$2"
-SCHEME="${3:-Scanner}"
+SCHEME="${3:-UltraScanner}"
 TEAM_ID="C6XD8H2J47" # Fernando Jimenez Gordillo (Apple Developer Program)
 BUNDLE_ID="com.efegord.scanner"
 
@@ -25,7 +25,7 @@ cd "$(dirname "$0")/.."
 # sin esa imagen.
 echo "--> xcodebuild $SCHEME ($CONFIG)"
 xcodebuild \
-  -project Scanner.xcodeproj \
+  -project UltraScanner.xcodeproj \
   -scheme "$SCHEME" \
   -configuration "$CONFIG" \
   -destination "generic/platform=iOS" \

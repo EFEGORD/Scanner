@@ -1,4 +1,4 @@
-name: Scanner
+name: UltraScanner
 options:
   bundleIdPrefix: com.efegord
   deploymentTarget:
@@ -9,20 +9,23 @@ settings:
     SWIFT_VERSION: "5.0"
 
 targets:
-  Scanner:
+  UltraScanner:
     type: application
     platform: iOS
     sources:
-      - path: Scanner
+      - path: UltraScanner
     info:
-      path: Scanner/Info.plist
+      path: UltraScanner/Info.plist
       properties:
+        CFBundleDisplayName: UltraScanner
         UILaunchScreen: {}
-        NSCameraUsageDescription: "Scanner necesita la cámara para escanear tus documentos."
+        NSCameraUsageDescription: "UltraScanner necesita la cámara para escanear tus documentos."
         NSFaceIDUsageDescription: "Usamos Face ID para que solo tú puedas abrir tus documentos."
         GADApplicationIdentifier: "ca-app-pub-3940256099942544~1458002511"
     settings:
       base:
+        # Se conserva el identificador original: cambiarlo instalaría otra app y la actual
+        # perdería el acceso a sus documentos cifrados.
         PRODUCT_BUNDLE_IDENTIFIER: com.efegord.scanner
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
@@ -31,6 +34,21 @@ targets:
     dependencies:
       - package: GRDB
       - package: GoogleMobileAds
+    scheme:
+      testTargets:
+        - UltraScannerTests
+
+  UltraScannerTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: UltraScannerTests
+    dependencies:
+      - target: UltraScanner
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        DEVELOPMENT_TEAM: C6XD8H2J47
 
 packages:
   GRDB:
