@@ -39,6 +39,10 @@ la contraseña de sudo de la Mac. Firma con la llave de App Store Connect
 - Ajustes: Face ID, formato al compartir, carpetas, firma guardada, espacio usado, cámara
 - OCR siempre en [idioma del teléfono + inglés], sin selector
 
+Bundle ID: `mx.com.claudita.ultrascanner` (registrado con `scripts/asc_bundle_id.py`). El
+nombre del servicio del Keychain (`EncryptionManager.service`) no debe cambiar nunca: sin él, los
+documentos guardados quedan ilegibles.
+
 ## Seguridad
 
 - Imágenes de las páginas y firma: AES-GCM (CryptoKit) con una llave en el Keychain
@@ -56,4 +60,3 @@ la contraseña de sudo de la Mac. Firma con la llave de App Store Connect
 
 - Capa de texto invisible "de verdad" en el PDF exportado (hoy va como anotación, `PDFGenerator`)
 - ID real de AdMob (hoy usa el de prueba de Google) y consentimiento de anuncios (UMP) para la UE
-- Identificador para el App Store: hoy `com.efegord.scanner`; definirlo antes de publicar

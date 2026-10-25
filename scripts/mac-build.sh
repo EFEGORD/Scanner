@@ -10,7 +10,7 @@ CONFIG="$1"
 DEVICE="$2"
 SCHEME="${3:-UltraScanner}"
 TEAM_ID="C6XD8H2J47" # Fernando Jimenez Gordillo (Apple Developer Program)
-BUNDLE_ID="com.efegord.scanner"
+BUNDLE_ID="mx.com.claudita.ultrascanner"
 
 # ASC_KEY_ID, ASC_ISSUER_ID y ASC_KEY_PATH. Vive fuera del proyecto, con permisos 600.
 ASC_ENV="$HOME/.appstoreconnect/asc.env"

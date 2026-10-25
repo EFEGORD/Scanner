@@ -8,7 +8,9 @@ import CryptoKit
 final class EncryptionManager {
     static let shared = EncryptionManager()
 
-    private static let service = "com.yourcompany.scanner.encryption"
+    // Never rename once published: the stored keys are found by this name, and without them
+    // every saved document becomes unreadable.
+    private static let service = "mx.com.claudita.ultrascanner.encryption"
     private static let fileKeyAccount = "file-encryption-key"
     private static let dbKeyAccount = "database-passphrase"
 
