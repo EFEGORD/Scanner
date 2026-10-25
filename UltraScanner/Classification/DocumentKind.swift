@@ -34,28 +34,28 @@ enum DocumentKind: String, CaseIterable {
     var displayName: String {
         switch self {
         case .ine: return "INE"
-        case .passport: return "Pasaporte"
-        case .passportCard: return "Passport Card"
-        case .driversLicense: return "Licencia de conducir"
-        case .stateID: return "Identificación estatal"
-        case .greenCard: return "Green card"
-        case .usIDCard: return "Identificación de EE. UU."
-        case .socialSecurityCard: return "Tarjeta del Seguro Social"
+        case .passport: return String(localized: "Pasaporte")
+        case .passportCard: return String(localized: "Passport Card")
+        case .driversLicense: return String(localized: "Licencia de conducir")
+        case .stateID: return String(localized: "Identificación estatal")
+        case .greenCard: return String(localized: "Green card")
+        case .usIDCard: return String(localized: "Identificación de EE. UU.")
+        case .socialSecurityCard: return String(localized: "Tarjeta del Seguro Social")
         case .curp: return "CURP"
-        case .rfcCertificate: return "Constancia de situación fiscal"
-        case .cfdiInvoice: return "Factura (CFDI)"
-        case .invoice: return "Factura"
+        case .rfcCertificate: return String(localized: "Constancia de situación fiscal")
+        case .cfdiInvoice: return String(localized: "Factura (CFDI)")
+        case .invoice: return String(localized: "Factura")
         case .w2: return "W-2"
         case .w9: return "W-9"
         case .form1099: return "1099"
-        case .form1040: return "Declaración 1040"
-        case .payStub: return "Recibo de nómina"
-        case .birthCertificate: return "Acta de nacimiento"
-        case .utilityBill: return "Comprobante de domicilio"
-        case .bankStatement: return "Estado de cuenta"
-        case .lease: return "Contrato de arrendamiento"
-        case .insuranceCard: return "Seguro"
-        case .vehicleDocument: return "Documento del vehículo"
+        case .form1040: return String(localized: "Declaración 1040")
+        case .payStub: return String(localized: "Recibo de nómina")
+        case .birthCertificate: return String(localized: "Acta de nacimiento")
+        case .utilityBill: return String(localized: "Comprobante de domicilio")
+        case .bankStatement: return String(localized: "Estado de cuenta")
+        case .lease: return String(localized: "Contrato de arrendamiento")
+        case .insuranceCard: return String(localized: "Seguro")
+        case .vehicleDocument: return String(localized: "Documento del vehículo")
         }
     }
 
@@ -108,7 +108,7 @@ enum DocumentSide: String {
     case back
 
     var displayName: String {
-        self == .front ? "frente" : "reverso"
+        self == .front ? String(localized: "frente") : String(localized: "reverso")
     }
 
     var searchTerms: [String] {

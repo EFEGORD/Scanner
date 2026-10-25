@@ -43,6 +43,16 @@ Bundle ID: `mx.com.claudita.ultrascanner` (registrado con `scripts/asc_bundle_id
 nombre del servicio del Keychain (`EncryptionManager.service`) no debe cambiar nunca: sin él, los
 documentos guardados quedan ilegibles.
 
+## Idiomas
+
+La app se escribe en español (idioma de desarrollo) y trae inglés en
+`UltraScanner/Localizable.xcstrings` (textos) y `UltraScanner/InfoPlist.xcstrings` (permisos).
+Los textos armados en código van con `String(localized:)`; en las vistas, los literales de
+`Text`/`Button`/etc. ya se traducen solos. Al agregar o cambiar textos:
+
+    scripts/deploy-ios.sh sim
+    scripts/check-strings.sh      # lista los que faltan en el catálogo y los que ya no se usan
+
 ## Anuncios
 
 AdMob 12 + formulario de consentimiento de Google (UMP) + aviso de rastreo de Apple, igual que

@@ -1,0 +1,46 @@
+{
+  "sourceLanguage" : "es",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UltraScanner"
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UltraScanner needs the camera to scan your documents."
+          }
+        }
+      }
+    },
+    "NSFaceIDUsageDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We use Face ID so only you can open your documents."
+          }
+        }
+      }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UltraScanner is free thanks to an ad when you share. With your permission, ads can be more relevant to you."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

@@ -58,6 +58,6 @@ enum ExportService {
             .components(separatedBy: invalid)
             .joined(separator: "-")
             .trimmingCharacters(in: .whitespaces)
-        return cleaned.isEmpty ? "Documento" : cleaned
+        return cleaned.isEmpty ? String(localized: "Documento") : cleaned
     }
 }

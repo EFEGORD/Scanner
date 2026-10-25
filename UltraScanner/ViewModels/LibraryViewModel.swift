@@ -42,12 +42,12 @@ final class LibraryViewModel: ObservableObject {
     }
 
     func folderName(for document: ScanDocument) -> String {
-        folders.first { $0.id == document.folderId }?.name ?? "Sin carpeta"
+        folders.first { $0.id == document.folderId }?.name ?? String(localized: "Sin carpeta")
     }
 
     func pageCountText(for document: ScanDocument) -> String {
         let count = pageCounts[document.id] ?? 0
-        return count == 1 ? "1 página" : "\(count) páginas"
+        return count == 1 ? String(localized: "1 página") : String(localized: "\(count) páginas")
     }
 
     func createFolder(name: String) {

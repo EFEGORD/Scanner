@@ -75,7 +75,7 @@ struct ShareDocumentView: View {
                 UIApplication.topViewController()?.present(activity, animated: true)
             } catch {
                 isPreparing = false
-                errorMessage = "No se pudo preparar el archivo para compartir."
+                errorMessage = String(localized: "No se pudo preparar el archivo para compartir.")
             }
         }
     }

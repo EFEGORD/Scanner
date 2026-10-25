@@ -45,7 +45,7 @@ final class AppLockManager: ObservableObject {
             return
         }
 
-        context.evaluatePolicy(policy, localizedReason: "Desbloquea UltraScanner para ver tus documentos") { success, _ in
+        context.evaluatePolicy(policy, localizedReason: String(localized: "Desbloquea UltraScanner para ver tus documentos")) { success, _ in
             DispatchQueue.main.async {
                 self.isLocked = !success
                 completion(success)

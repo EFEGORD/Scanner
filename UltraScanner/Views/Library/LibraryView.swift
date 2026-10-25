@@ -150,7 +150,7 @@ struct LibraryView: View {
     private var folderChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                chip(title: "Todos", isSelected: viewModel.selectedFolderId == nil) {
+                chip(title: String(localized: "Todos"), isSelected: viewModel.selectedFolderId == nil) {
                     viewModel.selectFolder(nil)
                 }
                 ForEach(viewModel.folders) { folder in

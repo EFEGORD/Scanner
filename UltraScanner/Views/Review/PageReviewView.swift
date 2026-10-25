@@ -48,7 +48,9 @@ struct PageReviewView: View {
                 .padding()
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(session.pages.count == 1 ? "1 página" : "\(session.pages.count) páginas")
+        .navigationTitle(session.pages.count == 1
+                         ? String(localized: "1 página")
+                         : String(localized: "\(session.pages.count) páginas"))
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $showScanner) {
             DocumentScannerView(

@@ -38,11 +38,17 @@ struct OnboardingFlowView: View {
                         }
                     }
 
-                    Button(currentIndex == slides.count - 1 ? "Comenzar" : "Siguiente") {
+                    Button {
                         if currentIndex == slides.count - 1 {
                             goToPermissions = true
                         } else {
                             withAnimation { currentIndex += 1 }
+                        }
+                    } label: {
+                        if currentIndex == slides.count - 1 {
+                            Text("Comenzar")
+                        } else {
+                            Text("Siguiente")
                         }
                     }
                     .buttonStyle(.primaryFilled)

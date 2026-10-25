@@ -94,8 +94,8 @@ struct DocumentViewerView: View {
     }
 
     private var subtitle: String {
-        let count = pages.count == 1 ? "1 página" : "\(pages.count) páginas"
-        let folder = folders.first { $0.id == document.folderId }?.name ?? "Sin carpeta"
+        let count = pages.count == 1 ? String(localized: "1 página") : String(localized: "\(pages.count) páginas")
+        let folder = folders.first { $0.id == document.folderId }?.name ?? String(localized: "Sin carpeta")
         return "\(count) · \(folder)"
     }
 
@@ -154,7 +154,7 @@ struct DocumentViewerView: View {
         .overlay(alignment: .top) { Divider() }
     }
 
-    private func actionLabel(_ title: String, systemImage: String, highlighted: Bool = false) -> some View {
+    private func actionLabel(_ title: LocalizedStringKey, systemImage: String, highlighted: Bool = false) -> some View {
         VStack(spacing: 6) {
             Image(systemName: systemImage)
                 .font(.title3)

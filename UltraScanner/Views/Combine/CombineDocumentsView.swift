@@ -144,10 +144,16 @@ struct CombineDocumentsView: View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if viewModel.results.isEmpty {
-                    Text(viewModel.isSearching ? "Sin resultados para \"\(viewModel.query)\"." : "Aún no tienes documentos.")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .padding(.top, 24)
+                    Group {
+                        if viewModel.isSearching {
+                            Text("Sin resultados para \"\(viewModel.query)\".")
+                        } else {
+                            Text("Aún no tienes documentos.")
+                        }
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .padding(.top, 24)
                 }
                 ForEach(viewModel.results) { candidate in
                     candidateCard(candidate)
@@ -199,10 +205,14 @@ struct CombineDocumentsView: View {
     }
 
     private func subtitle(for candidate: CombineViewModel.Candidate) -> String {
-        let count = candidate.pages.count == 1 ? "1 página" : "\(candidate.pages.count) páginas"
+        let count = candidate.pages.count == 1
+            ? String(localized: "1 página")
+            : String(localized: "\(candidate.pages.count) páginas")
         if candidate.matchedPageIds.isEmpty { return count }
         let hits = candidate.pages.filter { candidate.matchedPageIds.contains($0.id) }.count
-        return "\(count) · coincide en \(hits == 1 ? "1 página" : "\(hits) páginas")"
+        return hits == 1
+            ? String(localized: "\(count) · coincide en 1 página")
+            : String(localized: "\(count) · coincide en \(hits) páginas")
     }
 
     private func pageToggle(_ page: ScanPage, index: Int, matched: Bool) -> some View {
@@ -222,7 +232,7 @@ struct CombineDocumentsView: View {
                         .offset(x: 6, y: -6)
                 }
         }
-        .accessibilityLabel(added ? "Quitar página \(index + 1)" : "Añadir página \(index + 1)")
+        .accessibilityLabel(added ? Text("Quitar página \(index + 1)") : Text("Añadir página \(index + 1)"))
     }
 
     // MARK: - Bottom
@@ -253,7 +263,7 @@ private struct CombineSaveView: View {
     @ObservedObject var viewModel: CombineViewModel
     let onSaved: () -> Void
 
-    @State private var title = "Documento combinado"
+    @State private var title = String(localized: "Documento combinado")
     @State private var selectedFolderId: String?
     @State private var errorMessage: String?
 
@@ -264,7 +274,7 @@ private struct CombineSaveView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                 DocumentDetailsForm(title: $title, selectedFolderId: $selectedFolderId,
-                                    titleHint: "Los documentos originales no se modifican.")
+                                    titleHint: String(localized: "Los documentos originales no se modifican."))
                 if let errorMessage {
                     Text(errorMessage)
                         .font(.footnote)
@@ -295,11 +305,11 @@ private struct CombineSaveView: View {
         errorMessage = nil
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         do {
-            _ = try await viewModel.save(title: trimmed.isEmpty ? "Documento combinado" : trimmed,
+            _ = try await viewModel.save(title: trimmed.isEmpty ? String(localized: "Documento combinado") : trimmed,
                                          folderId: selectedFolderId)
             onSaved()
         } catch {
-            errorMessage = "No se pudo guardar el documento combinado."
+            errorMessage = String(localized: "No se pudo guardar el documento combinado.")
         }
     }
 }

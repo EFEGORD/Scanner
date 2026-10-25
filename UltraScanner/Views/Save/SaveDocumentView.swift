@@ -14,7 +14,7 @@ struct SaveDocumentView: View {
 
     private var pageCountText: String {
         let count = session.pages.count
-        return count == 1 ? "1 página escaneada" : "\(count) páginas escaneadas"
+        return count == 1 ? String(localized: "1 página escaneada") : String(localized: "\(count) páginas escaneadas")
     }
 
     var body: some View {
@@ -34,7 +34,7 @@ struct SaveDocumentView: View {
                 }
 
                 DocumentDetailsForm(title: $title, selectedFolderId: $selectedFolderId,
-                                    titleHint: "Sugerido a partir del texto del documento.")
+                                    titleHint: String(localized: "Sugerido a partir del texto del documento."))
 
                 if let errorMessage {
                     Text(errorMessage)
@@ -70,7 +70,7 @@ struct SaveDocumentView: View {
         }
         guard title.isEmpty else { return }
 
-        let placeholder = "Documento \(Date().formatted(date: .numeric, time: .omitted))"
+        let placeholder = String(localized: "Documento \(Date().formatted(date: .numeric, time: .omitted))")
         title = placeholder
         guard let text = try? await TextRecognizer.recognizeText(in: first.original),
               let suggestion = Self.suggestedTitle(from: text),
@@ -93,11 +93,11 @@ struct SaveDocumentView: View {
         let trimmed = title.trimmingCharacters(in: .whitespaces)
         do {
             _ = try await session.saveAsDocument(
-                title: trimmed.isEmpty ? "Documento sin título" : trimmed,
+                title: trimmed.isEmpty ? String(localized: "Documento sin título") : trimmed,
                 folderId: selectedFolderId)
             onSaved()
         } catch {
-            errorMessage = "No se pudo guardar el documento."
+            errorMessage = String(localized: "No se pudo guardar el documento.")
         }
     }
 }

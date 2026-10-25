@@ -1,0 +1,1688 @@
+{
+  "sourceLanguage" : "es",
+  "strings" : {
+    "%@ (parte 2)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ (part 2)"
+          }
+        }
+      }
+    },
+    "%@ · coincide en %lld páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · matches on %lld pages"
+          }
+        }
+      }
+    },
+    "%@ · coincide en 1 página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ · matches on 1 page"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "shouldTranslate" : false
+    },
+    "%lld páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pages"
+          }
+        }
+      }
+    },
+    "%lld páginas escaneadas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld pages scanned"
+          }
+        }
+      }
+    },
+    "+ Añadir todo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Add all"
+          }
+        }
+      }
+    },
+    "+ Carpeta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Folder"
+          }
+        }
+      }
+    },
+    "1 página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 page"
+          }
+        }
+      }
+    },
+    "1 página escaneada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 page scanned"
+          }
+        }
+      }
+    },
+    "Abriendo…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opening…"
+          }
+        }
+      }
+    },
+    "Acta de nacimiento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth certificate"
+          }
+        }
+      }
+    },
+    "Agregar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "Agregar páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add pages"
+          }
+        }
+      }
+    },
+    "Ahora no" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        }
+      }
+    },
+    "Ajusta filtros, agrega tu firma y comparte el PDF listo por WhatsApp, correo o AirDrop." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adjust filters, add your signature and share the finished PDF via WhatsApp, email or AirDrop."
+          }
+        }
+      }
+    },
+    "Ajustes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Al borrar una carpeta, sus documentos se conservan y quedan en \"Sin carpeta\"." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting a folder keeps its documents; they move to \"No folder\"."
+          }
+        }
+      }
+    },
+    "Al tocar Compartir se abre el menú de iOS para enviarlo por WhatsApp, Correo, AirDrop o la app que elijas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapping Share opens the iOS menu to send it via WhatsApp, Mail, AirDrop or any app you choose."
+          }
+        }
+      }
+    },
+    "Aplicar este filtro a todas las páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apply this filter to all pages"
+          }
+        }
+      }
+    },
+    "Añadido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added"
+          }
+        }
+      }
+    },
+    "Añadir página %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add page %lld"
+          }
+        }
+      }
+    },
+    "Aún no tienes carpetas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have any folders yet."
+          }
+        }
+      }
+    },
+    "Aún no tienes documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No documents yet"
+          }
+        }
+      }
+    },
+    "Aún no tienes documentos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You don't have any documents yet."
+          }
+        }
+      }
+    },
+    "Blanco y negro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Black & white"
+          }
+        }
+      }
+    },
+    "Bloquear con Face ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock with Face ID"
+          }
+        }
+      }
+    },
+    "Borrar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
+    "Borrar búsqueda" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear search"
+          }
+        }
+      }
+    },
+    "Borrar firma guardada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete saved signature"
+          }
+        }
+      }
+    },
+    "Buscar por contenido: \"INE\", \"comprobante\"…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search by content: \"passport\", \"invoice\"…"
+          }
+        }
+      }
+    },
+    "Buscar texto dentro de tus documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search text inside your documents"
+          }
+        }
+      }
+    },
+    "Calculando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calculating…"
+          }
+        }
+      }
+    },
+    "Cancelar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Carpeta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        }
+      }
+    },
+    "Carpetas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folders"
+          }
+        }
+      }
+    },
+    "Cerrar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "Color" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Color"
+          }
+        }
+      }
+    },
+    "Combinando y cifrando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combining and encrypting…"
+          }
+        }
+      }
+    },
+    "Combinar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combine"
+          }
+        }
+      }
+    },
+    "Combinar documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combine documents"
+          }
+        }
+      }
+    },
+    "Comenzar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get started"
+          }
+        }
+      }
+    },
+    "Compartir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share"
+          }
+        }
+      }
+    },
+    "Compartir documento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share document"
+          }
+        }
+      }
+    },
+    "Comprobante de domicilio" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proof of address"
+          }
+        }
+      }
+    },
+    "Constancia de situación fiscal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tax status certificate"
+          }
+        }
+      }
+    },
+    "Continuar a edición" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue to editing"
+          }
+        }
+      }
+    },
+    "Contrato de arrendamiento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lease agreement"
+          }
+        }
+      }
+    },
+    "Convierte fotos en PDFs nítidos, con texto buscable, en un solo toque." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn photos into sharp PDFs with searchable text in a single tap."
+          }
+        }
+      }
+    },
+    "Crear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
+    "Declaración 1040" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form 1040"
+          }
+        }
+      }
+    },
+    "Denegado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Denied"
+          }
+        }
+      }
+    },
+    "Desbloquea UltraScanner para ver tus documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock UltraScanner to see your documents"
+          }
+        }
+      }
+    },
+    "Desbloquear con Face ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock with Face ID"
+          }
+        }
+      }
+    },
+    "Dispositivo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Device"
+          }
+        }
+      }
+    },
+    "Divide un lote en varios documentos, o une páginas sueltas en uno solo, sin perder el orden ni volver a escanear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split a batch into several documents, or join loose pages into one, without losing the order or scanning again."
+          }
+        }
+      }
+    },
+    "Dividir aquí" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split here"
+          }
+        }
+      }
+    },
+    "Dividir después de esta página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split after this page"
+          }
+        }
+      }
+    },
+    "Documento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        }
+      }
+    },
+    "Documento %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document %@"
+          }
+        }
+      }
+    },
+    "Documento combinado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combined document"
+          }
+        }
+      }
+    },
+    "Documento del vehículo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vehicle document"
+          }
+        }
+      }
+    },
+    "Documento sin título" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untitled document"
+          }
+        }
+      }
+    },
+    "Documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Documents"
+          }
+        }
+      }
+    },
+    "Edita, firma y comparte al instante" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit, sign and share instantly"
+          }
+        }
+      }
+    },
+    "Editar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
+    "Editar y firmar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit & sign"
+          }
+        }
+      }
+    },
+    "El modo de lote detecta la siguiente hoja automáticamente y sigue capturando por ti, página tras página." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batch mode detects the next sheet automatically and keeps capturing for you, page after page."
+          }
+        }
+      }
+    },
+    "Eliminar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "Eliminar página %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete page %lld"
+          }
+        }
+      }
+    },
+    "Encuentra cualquier documento al instante" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find any document instantly"
+          }
+        }
+      }
+    },
+    "Escanea cualquier documento en segundos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan any document in seconds"
+          }
+        }
+      }
+    },
+    "Escanea tu primer documento. Se guarda cifrado y solo en este teléfono." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan your first document. It's saved encrypted, only on this phone."
+          }
+        }
+      }
+    },
+    "Escanea varias páginas sin detenerte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan multiple pages without stopping"
+          }
+        }
+      }
+    },
+    "Escanear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan"
+          }
+        }
+      }
+    },
+    "Escanear documento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan document"
+          }
+        }
+      }
+    },
+    "Escanear página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scan page"
+          }
+        }
+      }
+    },
+    "Espacio usado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Storage used"
+          }
+        }
+      }
+    },
+    "Estado de cuenta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bank statement"
+          }
+        }
+      }
+    },
+    "Factura" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invoice"
+          }
+        }
+      }
+    },
+    "Factura (CFDI)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invoice (CFDI)"
+          }
+        }
+      }
+    },
+    "Firma" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signature"
+          }
+        }
+      }
+    },
+    "Firma guardada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved signature"
+          }
+        }
+      }
+    },
+    "Firmar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sign"
+          }
+        }
+      }
+    },
+    "Formato" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format"
+          }
+        }
+      }
+    },
+    "Formato al compartir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sharing format"
+          }
+        }
+      }
+    },
+    "Green card" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Green card"
+          }
+        }
+      }
+    },
+    "Guardada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved"
+          }
+        }
+      }
+    },
+    "Guardar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
+    "Guardar cambios" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save changes"
+          }
+        }
+      }
+    },
+    "Guardar documento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save document"
+          }
+        }
+      }
+    },
+    "Guardar para la próxima vez" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save for next time"
+          }
+        }
+      }
+    },
+    "Identificación de EE. UU." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "US ID card"
+          }
+        }
+      }
+    },
+    "Identificación estatal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State ID"
+          }
+        }
+      }
+    },
+    "Intenta de nuevo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please try again."
+          }
+        }
+      }
+    },
+    "JPG" : {
+      "shouldTranslate" : false
+    },
+    "La búsqueda inteligente lee el texto de tus escaneos: busca \"factura marzo\" o \"contrato\" y aparece, aunque el archivo tenga otro nombre." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart search reads the text in your scans: search \"march invoice\" or \"contract\" and it shows up, even if the file has another name."
+          }
+        }
+      }
+    },
+    "La usamos solo para escanear. Tus fotos nunca salen de tu teléfono." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We only use it to scan. Your photos never leave your phone."
+          }
+        }
+      }
+    },
+    "Las páginas siguientes pasan a un documento nuevo en la misma carpeta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The following pages move to a new document in the same folder."
+          }
+        }
+      }
+    },
+    "Leyendo el texto y cifrando…" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading the text and encrypting…"
+          }
+        }
+      }
+    },
+    "Licencia de conducir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Driver's license"
+          }
+        }
+      }
+    },
+    "Listo" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Los documentos originales no se modifican." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The original documents are not changed."
+          }
+        }
+      }
+    },
+    "Magia" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Magic"
+          }
+        }
+      }
+    },
+    "Mantén presionada una página para moverla o eliminarla." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch and hold a page to move or delete it."
+          }
+        }
+      }
+    },
+    "Mis documentos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My documents"
+          }
+        }
+      }
+    },
+    "Mover a carpeta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move to folder"
+          }
+        }
+      }
+    },
+    "Mover antes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move earlier"
+          }
+        }
+      }
+    },
+    "Mover después" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move later"
+          }
+        }
+      }
+    },
+    "Más opciones" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More options"
+          }
+        }
+      }
+    },
+    "Ninguna" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "No hay documentos en esta carpeta." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no documents in this folder."
+          }
+        }
+      }
+    },
+    "No se pudieron guardar los cambios" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The changes couldn't be saved"
+          }
+        }
+      }
+    },
+    "No se pudo guardar el documento combinado." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The combined document couldn't be saved."
+          }
+        }
+      }
+    },
+    "No se pudo guardar el documento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The document couldn't be saved."
+          }
+        }
+      }
+    },
+    "No se pudo preparar el archivo para compartir." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file couldn't be prepared for sharing."
+          }
+        }
+      }
+    },
+    "Nombre" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "Nombre del documento" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document name"
+          }
+        }
+      }
+    },
+    "Nueva carpeta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New folder"
+          }
+        }
+      }
+    },
+    "Nuevo documento · %lld hojas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New document · %lld pages"
+          }
+        }
+      }
+    },
+    "Nuevo documento · 1 hoja" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New document · 1 page"
+          }
+        }
+      }
+    },
+    "O dibuja una nueva:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or draw a new one:"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "shouldTranslate" : false
+    },
+    "Omitir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
+          }
+        }
+      }
+    },
+    "Original" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original"
+          }
+        }
+      }
+    },
+    "PDF" : {
+      "shouldTranslate" : false
+    },
+    "Pasaporte" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passport"
+          }
+        }
+      }
+    },
+    "Passport Card" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passport Card"
+          }
+        }
+      }
+    },
+    "Permiso de cámara" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Camera access"
+          }
+        }
+      }
+    },
+    "Permite el acceso a la cámara" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow camera access"
+          }
+        }
+      }
+    },
+    "Permitido" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allowed"
+          }
+        }
+      }
+    },
+    "Permitir acceso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow access"
+          }
+        }
+      }
+    },
+    "Página %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld"
+          }
+        }
+      }
+    },
+    "Página %lld de %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld of %lld"
+          }
+        }
+      }
+    },
+    "Página %lld · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Page %lld · %@"
+          }
+        }
+      }
+    },
+    "Página anterior" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous page"
+          }
+        }
+      }
+    },
+    "Página siguiente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next page"
+          }
+        }
+      }
+    },
+    "Páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages"
+          }
+        }
+      }
+    },
+    "Quitar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "Quitar firma" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove signature"
+          }
+        }
+      }
+    },
+    "Quitar hoja %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove page %lld"
+          }
+        }
+      }
+    },
+    "Quitar página %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove page %lld"
+          }
+        }
+      }
+    },
+    "Recibo de nómina" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pay stub"
+          }
+        }
+      }
+    },
+    "Renombrar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
+          }
+        }
+      }
+    },
+    "Rotar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rotate"
+          }
+        }
+      }
+    },
+    "Se borra de este teléfono y no se puede recuperar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "It's deleted from this phone and can't be recovered."
+          }
+        }
+      }
+    },
+    "Se guarda cifrado, solo en este teléfono." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved encrypted, only on this phone."
+          }
+        }
+      }
+    },
+    "Seguridad" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Security"
+          }
+        }
+      }
+    },
+    "Seguro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Insurance"
+          }
+        }
+      }
+    },
+    "Separa o combina documentos cuando quieras" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split or combine documents anytime"
+          }
+        }
+      }
+    },
+    "Siguiente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        }
+      }
+    },
+    "Sin carpeta" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        }
+      }
+    },
+    "Sin pedir" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not requested"
+          }
+        }
+      }
+    },
+    "Sin resultados para \"%@\"." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results for \"%@\"."
+          }
+        }
+      }
+    },
+    "Sugerido a partir del texto del documento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggested from the document's text."
+          }
+        }
+      }
+    },
+    "Tarjeta del Seguro Social" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Social Security card"
+          }
+        }
+      }
+    },
+    "Toca \"Dividir aquí\" para pasar las páginas siguientes a un documento nuevo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap \"Split here\" to move the following pages to a new document."
+          }
+        }
+      }
+    },
+    "Toca + en las páginas de abajo, o \"Añadir todo\", para armar el documento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap + on the pages below, or \"Add all\", to build the document."
+          }
+        }
+      }
+    },
+    "Todo se guarda cifrado en tu propio teléfono y solo esta app puede leerlo. Nunca se sube a ningún servidor: nadie más puede robar o ver tus documentos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Everything is saved encrypted on your own phone and only this app can read it. Nothing is ever uploaded to a server: no one else can steal or see your documents."
+          }
+        }
+      }
+    },
+    "Todos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        }
+      }
+    },
+    "Tus documentos están protegidos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your documents are protected"
+          }
+        }
+      }
+    },
+    "Tus documentos se guardan cifrados solo en este teléfono. No hay copia en la nube: si pierdes el teléfono, se pierden tus documentos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your documents are saved encrypted only on this phone. There's no cloud copy: if you lose your phone, your documents are lost."
+          }
+        }
+      }
+    },
+    "UltraScanner está bloqueado" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UltraScanner is locked"
+          }
+        }
+      }
+    },
+    "Usa Face ID para ver tus documentos." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Face ID to see your documents."
+          }
+        }
+      }
+    },
+    "Usar esta firma" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use this signature"
+          }
+        }
+      }
+    },
+    "Usar firma guardada" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use saved signature"
+          }
+        }
+      }
+    },
+    "Versión" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "frente" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "front"
+          }
+        }
+      }
+    },
+    "reverso" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "back"
+          }
+        }
+      }
+    },
+    "¿Dividir el documento?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Split the document?"
+          }
+        }
+      }
+    },
+    "¿Eliminar este documento?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete this document?"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

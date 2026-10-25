@@ -7,7 +7,7 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage("app_lock_enabled") private var appLockEnabled = true
     @AppStorage("default_export_format") private var defaultFormat: ExportFormat = .pdf
-    @State private var storageUsed = "Calculando…"
+    @State private var storageUsed = String(localized: "Calculando…")
     @State private var hasSignature = false
 
     var body: some View {
@@ -23,7 +23,8 @@ struct SettingsView: View {
                         Text("JPG").tag(ExportFormat.jpg)
                     }
                     NavigationLink("Carpetas") { FoldersView() }
-                    LabeledContent("Firma guardada", value: hasSignature ? "Guardada" : "Ninguna")
+                    LabeledContent("Firma guardada",
+                                   value: hasSignature ? String(localized: "Guardada") : String(localized: "Ninguna"))
                     if hasSignature {
                         Button("Borrar firma guardada", role: .destructive) {
                             SignatureStore.deleteSaved()
@@ -62,9 +63,9 @@ struct SettingsView: View {
 
     private var cameraStatusText: String {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized: return "Permitido"
-        case .denied, .restricted: return "Denegado"
-        case .notDetermined: return "Sin pedir"
+        case .authorized: return String(localized: "Permitido")
+        case .denied, .restricted: return String(localized: "Denegado")
+        case .notDetermined: return String(localized: "Sin pedir")
         @unknown default: return "—"
         }
     }

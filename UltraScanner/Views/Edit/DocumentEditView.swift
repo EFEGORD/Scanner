@@ -85,7 +85,7 @@ struct DocumentEditView: View {
             onSaved()
             dismiss()
         } catch {
-            errorMessage = "Intenta de nuevo."
+            errorMessage = String(localized: "Intenta de nuevo.")
         }
     }
 }

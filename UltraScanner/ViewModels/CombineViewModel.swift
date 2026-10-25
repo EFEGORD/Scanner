@@ -42,7 +42,9 @@ final class CombineViewModel: ObservableObject {
     }
 
     var trayTitle: String {
-        tray.count == 1 ? "Nuevo documento · 1 hoja" : "Nuevo documento · \(tray.count) hojas"
+        tray.count == 1
+            ? String(localized: "Nuevo documento · 1 hoja")
+            : String(localized: "Nuevo documento · \(tray.count) hojas")
     }
 
     /// With no search, every document is listed so you can browse; with a search, only the

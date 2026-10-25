@@ -32,7 +32,7 @@ struct DocumentDetailsForm: View {
                     .foregroundStyle(.secondary)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        folderChip("Sin carpeta", id: nil)
+                        folderChip(String(localized: "Sin carpeta"), id: nil)
                         ForEach(folders) { folder in
                             folderChip(folder.name, id: folder.id)
                         }

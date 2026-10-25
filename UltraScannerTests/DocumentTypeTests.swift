@@ -198,7 +198,8 @@ final class DocumentClassifierTests: XCTestCase {
         let encoded = DocumentClassifier.encode(documents)
         XCTAssertEqual(encoded, "ine.back,passport")
         XCTAssertEqual(DocumentClassifier.decode(encoded), documents)
-        XCTAssertEqual(DocumentClassifier.label(for: documents), "INE · reverso, Pasaporte")
+        XCTAssertEqual(DocumentClassifier.label(for: documents),
+                       "INE · \(DocumentSide.back.displayName), \(DocumentKind.passport.displayName)")
         XCTAssertNil(DocumentClassifier.label(for: []))
 
         let tokens = DocumentClassifier.searchTokens(for: [DetectedDocument(kind: .ine, side: .back)])

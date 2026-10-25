@@ -4,7 +4,7 @@ import SwiftUI
 /// Used for a new scan (before saving) and for a document that's already saved.
 struct PageEditorView: View {
     @Binding var pages: [PageEditState]
-    let primaryTitle: String
+    let primaryTitle: LocalizedStringKey
     var isBusy = false
     let onPrimary: () -> Void
 
@@ -14,7 +14,7 @@ struct PageEditorView: View {
 
     private struct FilterOption: Identifiable {
         let filter: PageFilter
-        let title: String
+        let title: LocalizedStringKey
         var id: String { filter.rawValue }
     }
 
@@ -184,7 +184,7 @@ struct PageEditorView: View {
         .padding(.bottom, 14)
     }
 
-    private func toolButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+    private func toolButton(_ title: LocalizedStringKey, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack(spacing: 6) {
                 Image(systemName: systemImage).font(.title3)
