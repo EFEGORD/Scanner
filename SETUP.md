@@ -58,7 +58,8 @@ Los textos armados en código van con `String(localized:)`; en las vistas, los l
 https://ultratools.claudita.com.mx agrupa las apps: portada, `/ultrascanner/` (inicio, `soporte`
 y `privacidad`, las URLs de la ficha del App Store) y `/app-ads.txt` de AdMob. Corre en el
 nginx con Docker de la Mac mini (`~/Documents/NGINX`), con certificado de Let's Encrypt que
-renueva el contenedor `certbot`. `/ultravocal/` sirve la carpeta del sitio de UltraVocal tal
+renueva el contenedor `certbot` (cada 12 h); el contenedor `nginx` se recarga solo cada 6 h para
+tomar los certificados renovados (`command` en `~/Documents/NGINX/docker-compose.yml`). `/ultravocal/` sirve la carpeta del sitio de UltraVocal tal
 cual; `ultravocal.claudita.com.mx` sigue igual. El registro DNS lo mantiene el contenedor
 `cloudflare-ddns` (lista `DOMAINS` de `~/Documents/NGINX/cloudflare/docker-compose.yml`).
 
