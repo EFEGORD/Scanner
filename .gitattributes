@@ -1,0 +1,2 @@
+# The project is built on macOS: keep LF everywhere so scripts copied from Windows still run.
+* text=auto eol=lf

@@ -26,6 +26,8 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.efegord.scanner
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: C6XD8H2J47  # Fernando Jimenez Gordillo (Apple Developer Program)
     dependencies:
       - package: GRDB
       - package: GoogleMobileAds

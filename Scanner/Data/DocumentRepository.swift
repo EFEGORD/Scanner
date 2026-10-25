@@ -144,6 +144,17 @@ final class DocumentRepository {
 
     // MARK: - Búsqueda inteligente (texto OCR)
 
+    /// Turns what the user typed into a safe FTS5 query: every word must appear, each as a
+    /// prefix ("fact marz" finds "factura de marzo"). Punctuation is dropped, so input like
+    /// `luz-octubre` or `"INE:"` never reaches FTS5 as broken syntax.
+    static func ftsMatchExpression(for query: String) -> String? {
+        let words = query
+            .components(separatedBy: CharacterSet.alphanumerics.inverted)
+            .filter { !$0.isEmpty }
+        guard !words.isEmpty else { return nil }
+        return words.map { "\"\($0)\"*" }.joined(separator: " ")
+    }
+
     struct SearchHit {
         let document: ScanDocument
         let page: ScanPage
@@ -151,17 +162,18 @@ final class DocumentRepository {
     }
 
     func search(_ query: String) throws -> [SearchHit] {
-        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else { return [] }
+        guard let match = Self.ftsMatchExpression(for: query) else { return [] }
         return try dbQueue.read { db in
+            // pages.id is a UUID string; the FTS index is keyed by the pages table's integer rowid.
             let sql = """
                 SELECT pages.*, snippet(pages_fts, 0, '', '', '…', 10) AS snippet
                 FROM pages_fts
-                JOIN pages ON pages.id = pages_fts.rowid
+                JOIN pages ON pages.rowid = pages_fts.rowid
                 WHERE pages_fts MATCH ?
                 ORDER BY rank
                 LIMIT 50
             """
-            let rows = try Row.fetchAll(db, sql: sql, arguments: [query + "*"])
+            let rows = try Row.fetchAll(db, sql: sql, arguments: [match])
             return try rows.compactMap { row in
                 let page = try ScanPage(row: row)
                 guard let document = try ScanDocument.fetchOne(db, key: page.documentId) else { return nil }
