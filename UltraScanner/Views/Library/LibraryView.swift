@@ -127,6 +127,11 @@ struct LibraryView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(hit.document.title)
                             .font(.subheadline.weight(.bold))
+                        if let label = hit.page.documentLabel {
+                            Label(label, systemImage: "person.text.rectangle")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color.accentColor)
+                        }
                         Text("Página \(hit.page.position + 1) · \(hit.snippet)")
                             .font(.caption)
                             .foregroundStyle(.secondary)

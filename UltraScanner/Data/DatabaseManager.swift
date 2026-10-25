@@ -69,6 +69,8 @@ final class DatabaseManager {
     static func encryptPlaintextDatabase(at url: URL, passphrase: String) throws {
         guard FileManager.default.fileExists(atPath: url.path),
               let plain = try? open(url, passphrase: nil) else { return }
+        // Bring the old file to the current schema first, so both have the same columns.
+        try migrator.migrate(plain)
         try plain.close()
 
         let encryptedURL = url.deletingLastPathComponent().appendingPathComponent("scanner.encrypting.sqlite")
@@ -179,6 +181,31 @@ final class DatabaseManager {
                 t.synchronize(withTable: "pages")
                 t.column("ocr_text")
             }
+        }
+
+        // Document types (INE, passport, driver license, proof of address…) and their search
+        // words, which the search index covers next to the OCR text.
+        migrator.registerMigration("v2_document_types") { db in
+            try db.alter(table: "pages") { t in
+                t.add(column: "doc_types", .text)
+                t.add(column: "doc_tags", .text)
+            }
+            // Recreate the index with the new column. Its sync triggers go first, or the new
+            // ones would collide with them.
+            let triggers = try String.fetchAll(db, sql: """
+                SELECT name FROM sqlite_master
+                WHERE type = 'trigger' AND tbl_name = 'pages' AND sql LIKE '%pages_fts%'
+                """)
+            for trigger in triggers {
+                try db.execute(sql: "DROP TRIGGER \(trigger.quotedDatabaseIdentifier)")
+            }
+            try db.drop(table: "pages_fts")
+            try db.create(virtualTable: "pages_fts", using: FTS5()) { t in
+                t.synchronize(withTable: "pages")
+                t.column("ocr_text")
+                t.column("doc_tags")
+            }
+            try db.execute(sql: "INSERT INTO pages_fts(pages_fts) VALUES('rebuild')")
         }
 
         return migrator

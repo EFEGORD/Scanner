@@ -11,6 +11,8 @@ enum PageFactory {
     static func makePage(from image: UIImage, position: Int, filter: PageFilter = .original,
                          rotation: Int = 0) async throws -> ScanPage {
         let ocrText = try? await TextRecognizer.recognizeText(in: image)
+        let barcodes = await BarcodeReader.payloads(in: image)
+        let detected = DocumentClassifier.classify(text: ocrText ?? "", barcodes: barcodes)
         return try await Task.detached(priority: .userInitiated) { () -> ScanPage in
             let store = SecureFileStore.shared
             guard let full = image.jpegData(compressionQuality: 1.0),
@@ -23,7 +25,9 @@ enum PageFactory {
             try store.write(thumb, relativePath: thumbPath)
             return ScanPage(documentId: "", position: position, imagePath: imagePath, thumbPath: thumbPath,
                             rotation: rotation, filter: filter, ocrText: ocrText,
-                            ocrLanguages: TextRecognizer.recognitionLanguages())
+                            ocrLanguages: TextRecognizer.recognitionLanguages(),
+                            docTypes: DocumentClassifier.encode(detected),
+                            docTags: DocumentClassifier.searchTokens(for: detected))
         }.value
     }
 
@@ -35,7 +39,7 @@ enum PageFactory {
         let thumbPath = try store.copy(relativePath: page.thumbPath)
         return ScanPage(documentId: "", position: position, imagePath: imagePath, thumbPath: thumbPath,
                         rotation: page.rotation, filter: page.filter, ocrText: page.ocrText,
-                        ocrLanguages: page.ocrLanguages)
+                        ocrLanguages: page.ocrLanguages, docTypes: page.docTypes, docTags: page.docTags)
     }
 
     /// Decrypts a stored page image for editing.

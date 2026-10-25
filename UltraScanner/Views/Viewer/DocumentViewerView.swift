@@ -38,6 +38,16 @@ struct DocumentViewerView: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
 
+            if pages.indices.contains(currentPage), let label = pages[currentPage].documentLabel {
+                Label(label, systemImage: "person.text.rectangle")
+                    .font(.footnote.weight(.semibold))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.accentColor.opacity(0.12), in: Capsule())
+                    .foregroundStyle(Color.accentColor)
+                    .padding(.bottom, 10)
+            }
+
             if pages.count > 1 {
                 thumbnails
             }

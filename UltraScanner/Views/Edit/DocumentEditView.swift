@@ -79,9 +79,8 @@ struct DocumentEditView: View {
                 let final = await Task.detached(priority: .userInitiated) { state.rendered() }.value
                 let fresh = try await PageFactory.makePage(from: final, position: source.position)
                 try DocumentRepository.shared.replacePageImage(
-                    source, imagePath: fresh.imagePath, thumbPath: fresh.thumbPath,
-                    filter: state.filter, rotation: (source.rotation + (state.quarterTurns % 4) * 90) % 360,
-                    ocrText: fresh.ocrText)
+                    source, with: fresh,
+                    filter: state.filter, rotation: (source.rotation + (state.quarterTurns % 4) * 90) % 360)
             }
             onSaved()
             dismiss()

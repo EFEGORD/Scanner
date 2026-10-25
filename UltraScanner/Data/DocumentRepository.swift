@@ -229,22 +229,26 @@ final class DocumentRepository {
     /// Points a page at its newly written image/thumbnail (after Editar) and deletes the old
     /// encrypted files. New file names (instead of overwriting) also make every cached
     /// thumbnail on screen refresh.
-    func replacePageImage(_ page: ScanPage, imagePath: String, thumbPath: String,
-                          filter: PageFilter, rotation: Int, ocrText: String?) throws {
+    /// `fresh` is the edited page as PageFactory.makePage produced it (new files, new reading).
+    func replacePageImage(_ page: ScanPage, with fresh: ScanPage, filter: PageFilter, rotation: Int) throws {
         try dbQueue.write { db in
             var updated = page
-            updated.imagePath = imagePath
-            updated.thumbPath = thumbPath
+            updated.imagePath = fresh.imagePath
+            updated.thumbPath = fresh.thumbPath
             updated.filter = filter
             updated.rotation = rotation
-            // Re-read after editing (a rotated page usually reads better); keep the old text if
-            // the new reading came back empty.
-            if let ocrText, !ocrText.isEmpty { updated.ocrText = ocrText }
+            // Re-read after editing (a rotated page usually reads better); keep the old reading
+            // if the new one came back empty.
+            if let text = fresh.ocrText, !text.isEmpty {
+                updated.ocrText = text
+                updated.docTypes = fresh.docTypes
+                updated.docTags = fresh.docTags
+            }
             try updated.update(db)
 
             if var document = try ScanDocument.fetchOne(db, key: page.documentId) {
                 if document.thumbnailPath == page.thumbPath {
-                    document.thumbnailPath = thumbPath
+                    document.thumbnailPath = fresh.thumbPath
                 }
                 document.updatedAt = Date()
                 try document.update(db)
@@ -252,5 +256,22 @@ final class DocumentRepository {
         }
         SecureFileStore.shared.delete(relativePath: page.imagePath)
         SecureFileStore.shared.delete(relativePath: page.thumbPath)
+    }
+
+    // MARK: - Tipos de documento
+
+    /// Pages saved before document types existed.
+    func pagesNeedingClassification() throws -> [ScanPage] {
+        try dbQueue.read { db in
+            try ScanPage.filter(Column("doc_types") == nil).fetchAll(db)
+        }
+    }
+
+    func updateClassification(pageId: String, documents: [DetectedDocument]) throws {
+        try dbQueue.write { db in
+            try db.execute(sql: "UPDATE pages SET doc_types = ?, doc_tags = ? WHERE id = ?", arguments: [
+                DocumentClassifier.encode(documents), DocumentClassifier.searchTokens(for: documents), pageId,
+            ])
+        }
     }
 }

@@ -15,6 +15,12 @@ struct ScanPage: Identifiable, Codable, Equatable, FetchableRecord, PersistableR
     /// Extracted by Vision OCR. Stored in the encrypted SQLite file (SQLCipher), never in plain text on disk.
     var ocrText: String?
     var ocrLanguages: [String]?
+    /// Detected document types, e.g. "ine.back,passport" (see DocumentClassifier.encode).
+    /// nil = not analyzed yet; "" = analyzed, nothing recognized.
+    var docTypes: String?
+    /// Search words for those types, in Spanish and English ("ine reverso identificacion id…"),
+    /// indexed by the search next to the OCR text.
+    var docTags: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -26,6 +32,8 @@ struct ScanPage: Identifiable, Codable, Equatable, FetchableRecord, PersistableR
         case filter
         case ocrText = "ocr_text"
         case ocrLanguages = "ocr_lang"
+        case docTypes = "doc_types"
+        case docTags = "doc_tags"
     }
 
     init(id: String = UUID().uuidString,
@@ -36,7 +44,9 @@ struct ScanPage: Identifiable, Codable, Equatable, FetchableRecord, PersistableR
          rotation: Int = 0,
          filter: PageFilter = .color,
          ocrText: String? = nil,
-         ocrLanguages: [String]? = nil) {
+         ocrLanguages: [String]? = nil,
+         docTypes: String? = nil,
+         docTags: String? = nil) {
         self.id = id
         self.documentId = documentId
         self.position = position
@@ -46,6 +56,17 @@ struct ScanPage: Identifiable, Codable, Equatable, FetchableRecord, PersistableR
         self.filter = filter
         self.ocrText = ocrText
         self.ocrLanguages = ocrLanguages
+        self.docTypes = docTypes
+        self.docTags = docTags
+    }
+
+    var detectedDocuments: [DetectedDocument] {
+        DocumentClassifier.decode(docTypes)
+    }
+
+    /// "INE · reverso", "Pasaporte", … or nil when the page's type wasn't recognized.
+    var documentLabel: String? {
+        DocumentClassifier.label(for: detectedDocuments)
     }
 }
 

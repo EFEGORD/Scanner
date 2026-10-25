@@ -30,8 +30,9 @@ struct UltraScannerApp: App {
             }
             .onAppear {
                 appLock.lockIfNeeded()
-                _ = AdManager.shared // loads the first interstitial so it's ready at the first save
+                _ = AdManager.shared // loads the first interstitial so it's ready at the first share
             }
+            .task { await DocumentTypeBackfill.run() }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 appLock.lockIfNeeded()
             }

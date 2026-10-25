@@ -270,8 +270,7 @@ final class DocumentFlowTests: XCTestCase {
         XCTAssertEqual(final.size.width, original.size.height)
 
         let fresh = try await PageFactory.makePage(from: final, position: page.position)
-        try repository.replacePageImage(page, imagePath: fresh.imagePath, thumbPath: fresh.thumbPath,
-                                        filter: state.filter, rotation: 90, ocrText: fresh.ocrText)
+        try repository.replacePageImage(page, with: fresh, filter: state.filter, rotation: 90)
 
         let updated = try repository.pages(of: document.id)[0]
         XCTAssertEqual(updated.imagePath, fresh.imagePath)
