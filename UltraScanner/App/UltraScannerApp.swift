@@ -1,14 +1,9 @@
 import SwiftUI
-import GoogleMobileAds
 
 @main
 struct UltraScannerApp: App {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @StateObject private var appLock = AppLockManager.shared
-
-    init() {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
-    }
 
     var body: some Scene {
         WindowGroup {
@@ -30,7 +25,7 @@ struct UltraScannerApp: App {
             }
             .onAppear {
                 appLock.lockIfNeeded()
-                _ = AdManager.shared // loads the first interstitial so it's ready at the first share
+                AdManager.shared.prepareIfConsented()
             }
             .task { await DocumentTypeBackfill.run() }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in

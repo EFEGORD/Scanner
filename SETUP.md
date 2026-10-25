@@ -43,6 +43,14 @@ Bundle ID: `mx.com.claudita.ultrascanner` (registrado con `scripts/asc_bundle_id
 nombre del servicio del Keychain (`EncryptionManager.service`) no debe cambiar nunca: sin él, los
 documentos guardados quedan ilegibles.
 
+## Anuncios
+
+AdMob 12 + formulario de consentimiento de Google (UMP) + aviso de rastreo de Apple, igual que
+UltraVocal (`Ads/AdManager.swift`). Un intersticial solo antes de abrir el menú de compartir. El
+consentimiento se pide la primera vez que se comparte, no al abrir la app. Debug usa los IDs de
+prueba de Google; Release, los de la cuenta (`project.yml`, app «UltraScanner», bloque
+«Compartir documento»).
+
 ## Seguridad
 
 - Imágenes de las páginas y firma: AES-GCM (CryptoKit) con una llave en el Keychain
@@ -59,4 +67,3 @@ documentos guardados quedan ilegibles.
 ## Pendiente
 
 - Capa de texto invisible "de verdad" en el PDF exportado (hoy va como anotación, `PDFGenerator`)
-- ID real de AdMob (hoy usa el de prueba de Google) y consentimiento de anuncios (UMP) para la UE

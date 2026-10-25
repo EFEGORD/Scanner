@@ -63,7 +63,7 @@ struct ShareDocumentView: View {
     private func share() {
         isPreparing = true
         errorMessage = nil
-        AdManager.shared.showIfReady(from: UIApplication.topViewController()) {
+        AdManager.shared.beforeSharing {
             do {
                 let urls = try ExportService.makeShareFiles(for: document, format: format)
                 let activity = UIActivityViewController(activityItems: urls, applicationActivities: nil)

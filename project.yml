@@ -7,6 +7,9 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    # La subida al App Store pone uno nuevo en cada compilación (fecha y hora).
+    CURRENT_PROJECT_VERSION: "1"
 
 targets:
   UltraScanner:
@@ -18,10 +21,21 @@ targets:
       path: UltraScanner/Info.plist
       properties:
         CFBundleDisplayName: UltraScanner
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         NSCameraUsageDescription: "UltraScanner necesita la cámara para escanear tus documentos."
         NSFaceIDUsageDescription: "Usamos Face ID para que solo tú puedas abrir tus documentos."
-        GADApplicationIdentifier: "ca-app-pub-3940256099942544~1458002511"
+        NSUserTrackingUsageDescription: "UltraScanner es gratis gracias a un anuncio al compartir. Con tu permiso, los anuncios pueden ser más relevantes para ti."
+        GADApplicationIdentifier: $(ADMOB_APP_ID)
+        USInterstitialAdUnitID: $(ADMOB_INTERSTITIAL_ID)
+        SKAdNetworkItems:
+          - SKAdNetworkIdentifier: cstr6suwn9.skadnetwork
+        # El cifrado de la app es el del sistema: CryptoKit y SQLCipher sobre CommonCrypto de
+        # Apple, solo para proteger los datos del propio usuario en el iPhone. No hace falta
+        # documentación de exportación.
+        ITSAppUsesNonExemptEncryption: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: mx.com.claudita.ultrascanner
@@ -29,9 +43,21 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: C6XD8H2J47  # Fernando Jimenez Gordillo (Apple Developer Program)
+        # Debug usa los IDs de prueba de Google (anuncios de ejemplo); Release, los de la cuenta.
+        # mac-appstore.sh se detiene si Release lleva los de prueba.
+        ADMOB_APP_ID: ca-app-pub-3940256099942544~1458002511
+        ADMOB_INTERSTITIAL_ID: ca-app-pub-3940256099942544/4411468910
+      configs:
+        # Cuenta de AdMob: app «UltraScanner», bloque intersticial «Compartir documento».
+        Release:
+          ADMOB_APP_ID: ca-app-pub-4632667318066503~9191146576
+          ADMOB_INTERSTITIAL_ID: ca-app-pub-4632667318066503/1683443212
     dependencies:
       - package: GRDB
       - package: GoogleMobileAds
+        product: GoogleMobileAds
+      - package: UserMessagingPlatform
+        product: GoogleUserMessagingPlatform
     scheme:
       testTargets:
         - UltraScannerTests
@@ -54,6 +80,10 @@ packages:
   GRDB:
     url: https://github.com/sqlcipher/GRDB.swift
     from: 7.11.1
+  # Anuncios (igual que UltraVocal): AdMob y su formulario de consentimiento.
   GoogleMobileAds:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads
-    from: 11.0.0
+    from: 12.0.0
+  UserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform
+    from: 3.0.0
