@@ -9,6 +9,9 @@ struct SettingsView: View {
     @AppStorage("default_export_format") private var defaultFormat: ExportFormat = .pdf
     @State private var storageUsed = String(localized: "Calculando…")
     @State private var hasSignature = false
+    #if DEBUG
+    @AppStorage("debug_ads_disabled") private var debugAdsDisabled = false
+    #endif
 
     var body: some View {
         NavigationStack {
@@ -47,6 +50,17 @@ struct SettingsView: View {
                     }
                     .tint(Color.primary)
                 }
+
+                #if DEBUG
+                // Debug only, so the texts are verbatim: they never reach the string catalog.
+                Section {
+                    Toggle(isOn: $debugAdsDisabled) { Text(verbatim: "Sin anuncios") }
+                } header: {
+                    Text(verbatim: "Desarrollo")
+                } footer: {
+                    Text(verbatim: "Solo en la versión Debug: al compartir no sale anuncio, ni el formulario de consentimiento ni el aviso de rastreo.")
+                }
+                #endif
 
                 Section {
                     LabeledContent("Versión", value: appVersion)

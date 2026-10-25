@@ -21,9 +21,17 @@ final class AdManager: NSObject, FullScreenContentDelegate {
         Bundle.main.object(forInfoDictionaryKey: "USInterstitialAdUnitID") as? String ?? ""
     }
 
+    #if DEBUG
+    /// Debug only: Ajustes › "Sin anuncios" shares without ad, consent form or tracking prompt.
+    static var isDisabledForDebug: Bool { UserDefaults.standard.bool(forKey: "debug_ads_disabled") }
+    #endif
+
     /// At launch: only if the user already answered the consent form in an earlier session.
     /// Nobody gets asked for consent just for opening the app.
     func prepareIfConsented() {
+        #if DEBUG
+        if Self.isDisabledForDebug { return }
+        #endif
         guard ConsentInformation.shared.canRequestAds else { return }
         load()
     }
@@ -33,6 +41,12 @@ final class AdManager: NSObject, FullScreenContentDelegate {
     /// ad and one is loaded for the next. A missing ad (no network, no consent) never blocks
     /// sharing.
     func beforeSharing(then share: @escaping () -> Void) {
+        #if DEBUG
+        if Self.isDisabledForDebug {
+            share()
+            return
+        }
+        #endif
         Task {
             if !consentGatheredThisLaunch {
                 consentGatheredThisLaunch = true
