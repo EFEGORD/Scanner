@@ -9,8 +9,8 @@ import UserMessagingPlatform
 ///
 /// Off unless UltraScanner/GoogleService-Info.plist is in the app. Debug builds only send with
 /// -USAnalytics YES (and never in the screenshot demo). Consent follows Google's form, the same
-/// one the ads use: until it is answered where the law requires it, Analytics runs with storage
-/// denied (consent mode defaults in project.yml).
+/// one the ads use: where GDPR applies (EEA, UK, Switzerland), Analytics runs with storage denied
+/// (consent mode defaults in project.yml) until the user answers it; elsewhere it is granted.
 enum AppAnalytics {
     enum Event: String {
         case scanSaved = "scan_saved"               // pages, signed
@@ -44,21 +44,24 @@ enum AppAnalytics {
         Analytics.logEvent(event.rawValue, parameters: parameters.isEmpty ? nil : parameters)
     }
 
-    /// At launch (refreshing Google's consent status, no form) and after the form is answered.
+    /// At launch (refreshing Google's consent information, no form) and after the form is answered.
+    ///
+    /// Keyed on whether GDPR applies, not on ConsentInformation.consentStatus: that one says
+    /// "required" wherever the ads form will be shown (e.g. Mexico or the US states), which would
+    /// leave Analytics without storage until the first share even where no consent is needed.
     @MainActor
     static func updateConsent(refresh: Bool = false) async {
         guard isRunning else { return }
-        let info = ConsentInformation.shared
         if refresh {
-            try? await info.requestConsentInfoUpdate(with: RequestParameters())
+            try? await ConsentInformation.shared.requestConsentInfoUpdate(with: RequestParameters())
         }
-        switch info.consentStatus {
-        case .notRequired:
+        // Written by Google's consent SDK after the update; missing (e.g. offline on the very
+        // first launch) → stay denied this session.
+        guard let gdprApplies = UserDefaults.standard.object(forKey: "IABTCF_gdprApplies") as? Int else { return }
+        if gdprApplies == 1 {
+            if let answers = consentFromTCF() { Analytics.setConsent(answers) } // else: not answered yet
+        } else {
             Analytics.setConsent(allGranted)
-        case .obtained:
-            Analytics.setConsent(consentFromTCF() ?? allGranted)
-        default:
-            break // still denied: the user hasn't answered a form the law requires
         }
     }
 
@@ -68,8 +71,7 @@ enum AppAnalytics {
 
     /// GDPR answers saved by Google's form (IAB TCF), mapped the way Google documents for consent
     /// mode: storage ← purpose 1; ad user data ← purposes 1 and 7; ad personalization ← purposes 3
-    /// and 4; all only if Google (vendor 755) is allowed. nil when there is no TCF answer (e.g. the
-    /// US state laws message, which is opt-out).
+    /// and 4; all only if Google (vendor 755) is allowed. nil while the form hasn't been answered.
     private static func consentFromTCF() -> Consent? {
         let defaults = UserDefaults.standard
         guard let purposes = defaults.string(forKey: "IABTCF_PurposeConsents"), !purposes.isEmpty else { return nil }
