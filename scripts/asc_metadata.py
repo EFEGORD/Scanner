@@ -328,6 +328,12 @@ def main():
     app = apps[0]
     print(f"==> App: {app['attributes']['name']} ({app['id']}), idioma principal {app['attributes']['primaryLocale']}")
 
+    # «Derechos de contenido»: sin esto App Store Connect no deja enviar a revisión.
+    if meta.get("contentRights"):
+        print(f"==> Derechos de contenido: {meta['contentRights']}")
+        client.call("PATCH", f"/v1/apps/{app['id']}", {"data": {"type": "apps", "id": app["id"], "attributes": {
+            "contentRightsDeclaration": meta["contentRights"]}}})
+
     # --- Información de la app (la editable: la que no está a la venta) -----------------------
     infos = client.call("GET", f"/v1/apps/{app['id']}/appInfos")["data"]
     info = next((i for i in infos if i["attributes"].get("state", i["attributes"].get("appStoreState"))

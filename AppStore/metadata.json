@@ -5,6 +5,7 @@
   "primaryCategory": "PRODUCTIVITY",
   "secondaryCategory": "BUSINESS",
   "containsAds": true,
+  "contentRights": "DOES_NOT_USE_THIRD_PARTY_CONTENT",
   "localizations": {
     "es-MX": {
       "name": "UltraScanner: PDF Scanner",
