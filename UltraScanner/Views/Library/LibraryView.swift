@@ -225,7 +225,7 @@ struct LibraryView: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 22)
                 .frame(height: 58)
-                .background(Color.accentColor, in: Capsule())
+                .background(.ultraGradient, in: Capsule())
                 .shadow(color: Color.accentColor.opacity(0.35), radius: 10, y: 6)
         }
         .padding(20)
