@@ -14,6 +14,9 @@ MAC_HOST="${MAC_HOST:-mac-mini-de-fernando.local}"
 SRC="/Users/$MAC_USER/Library/Developer/UltraScannerShotsSrc"
 SIMULATOR="${SIMULATOR:-iPhone 17 Pro Max}"
 SCREENS="library viewer search combine security" # el documento firmado, segundo
+# Para pruebas de diseño: LANGS="es-MX:es:es_MX" DEST=build/pantallas scripts/screenshots.sh
+LANGS="${LANGS:-es-MX:es:es_MX en-US:en:en_US}"
+DEST="${DEST:-AppStore/capturas}"
 
 echo "==> Copiando el proyecto"
 ssh "$MAC_USER@$MAC_HOST" "rm -rf $SRC && mkdir -p $SRC"
@@ -44,7 +47,7 @@ xcrun simctl status_bar "\$SIM" override --time "9:41" --dataNetwork wifi --wifi
   --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
 
 rm -rf "\$OUT"
-for pair in "es-MX:es:es_MX" "en-US:en:en_US"; do
+for pair in $LANGS; do
   IFS=: read -r folder lang locale <<< "\$pair"
   mkdir -p "\$OUT/\$folder"
   # Instalación limpia por idioma: el modo demo llena la biblioteca en el idioma del teléfono.
@@ -73,6 +76,6 @@ echo "==> Capturas en el simulador ($SIMULATOR)"
 ssh "$MAC_USER@$MAC_HOST" "zsh -lc $(printf '%q' "$REMOTE")"
 
 echo "==> Trayendo las capturas"
-rm -rf AppStore/capturas && mkdir -p AppStore/capturas
-ssh "$MAC_USER@$MAC_HOST" 'cd $HOME/Library/Developer/UltraScannerShots && tar -cf - .' | tar -xf - -C AppStore/capturas
-find AppStore/capturas -name '*.png' | sort
+rm -rf "$DEST" && mkdir -p "$DEST"
+ssh "$MAC_USER@$MAC_HOST" 'cd $HOME/Library/Developer/UltraScannerShots && tar -cf - .' | tar -xf - -C "$DEST"
+find "$DEST" -name '*.png' | sort
