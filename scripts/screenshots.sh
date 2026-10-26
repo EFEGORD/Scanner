@@ -13,7 +13,7 @@ MAC_HOST="${MAC_HOST:-mac-mini-de-fernando.local}"
 # Carpeta propia: no toca la copia de scripts/deploy-ios.sh ni su compilación.
 SRC="/Users/$MAC_USER/Library/Developer/UltraScannerShotsSrc"
 SIMULATOR="${SIMULATOR:-iPhone 17 Pro Max}"
-SCREENS="library search viewer combine security"
+SCREENS="library viewer search combine security" # el documento firmado, segundo
 
 echo "==> Copiando el proyecto"
 ssh "$MAC_USER@$MAC_HOST" "rm -rf $SRC && mkdir -p $SRC"
