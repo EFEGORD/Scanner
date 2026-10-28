@@ -36,13 +36,9 @@ struct LibraryView: View {
                 }
             }
             .background(Color(.systemGroupedBackground))
-            .overlay(alignment: .bottomTrailing) {
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 if viewModel.hasAnyDocument && !viewModel.isSearching {
-                    HStack(spacing: 12) {
-                        importButton
-                        scanButton
-                    }
-                    .padding(20)
+                    actionBar
                 }
             }
             .overlay {
@@ -250,7 +246,24 @@ struct LibraryView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .safeAreaInset(edge: .bottom) { Color.clear.frame(height: 80) }
+    }
+
+    /// Matches Home.dc.html: Importar and Escanear side by side in a bar under the list, so they
+    /// never cover a document; Escanear is the main one (1 : 1.6).
+    private var actionBar: some View {
+        GeometryReader { geometry in
+            HStack(spacing: 12) {
+                importButton
+                    .frame(width: (geometry.size.width - 12) / 2.6)
+                scanButton
+            }
+        }
+        .frame(height: 54)
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background(Color(.systemBackground).ignoresSafeArea(edges: .bottom))
+        .overlay(alignment: .top) { Divider() }
     }
 
     private var scanButton: some View {
@@ -258,10 +271,9 @@ struct LibraryView: View {
             Label("Escanear", systemImage: "doc.viewfinder")
                 .font(.headline)
                 .foregroundStyle(.white)
-                .padding(.horizontal, 22)
-                .frame(height: 58)
-                .background(.ultraGradient, in: Capsule())
-                .shadow(color: Color.accentColor.opacity(0.35), radius: 10, y: 6)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.ultraGradient, in: RoundedRectangle(cornerRadius: 16))
+                .shadow(color: Color.accentColor.opacity(0.3), radius: 6, y: 3)
         }
     }
 
@@ -270,10 +282,9 @@ struct LibraryView: View {
             Label("Importar", systemImage: "square.and.arrow.down")
                 .font(.headline)
                 .foregroundStyle(Color.accentColor)
-                .padding(.horizontal, 20)
-                .frame(height: 58)
-                .background(Color(.systemBackground), in: Capsule())
-                .shadow(color: .black.opacity(0.12), radius: 10, y: 6)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+                .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5))
         }
         .disabled(isImporting)
     }
