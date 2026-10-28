@@ -18,6 +18,7 @@ enum AppAnalytics {
         case documentShared = "document_shared"     // format
         case documentsCombined = "documents_combined" // pages, scanned_pages
         case documentSplit = "document_split"
+        case documentImported = "document_imported" // pages, source (files | shared)
         case searchUsed = "search_used"
         case folderCreated = "folder_created"
         case onboardingFinished = "onboarding_finished"

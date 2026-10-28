@@ -11,6 +11,7 @@ struct UltraScannerApp: App {
 
     init() {
         AppAnalytics.start()
+        ImportInbox.discardLeftovers()
     }
 
     var body: some Scene {
@@ -56,6 +57,8 @@ struct UltraScannerApp: App {
             AdManager.shared.prepareIfConsented()
         }
         .task { await DocumentTypeBackfill.run() }
+        // A PDF or image shared from another app; the Biblioteca imports it once unlocked.
+        .onOpenURL { ImportInbox.shared.receive($0) }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             appLock.lockIfNeeded()
         }

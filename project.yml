@@ -31,6 +31,18 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        # PDFs e imágenes compartidos desde otras apps (Compartir › UltraScanner): iOS los copia a
+        # Documents/Inbox y la app los importa (Import/ImportInbox.swift). No se editan en su lugar.
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: PDF
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [com.adobe.pdf]
+          - CFBundleTypeName: Image
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes: [public.image]
+        LSSupportsOpeningDocumentsInPlace: false
         NSCameraUsageDescription: "UltraScanner necesita la cámara para escanear tus documentos."
         NSFaceIDUsageDescription: "Usamos Face ID para que solo tú puedas abrir tus documentos."
         NSUserTrackingUsageDescription: "UltraScanner es gratis gracias a un anuncio al compartir. Con tu permiso, los anuncios pueden ser más relevantes para ti."

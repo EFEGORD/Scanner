@@ -664,6 +664,26 @@
         }
       }
     },
+    "El PDF está protegido con contraseña." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The PDF is password-protected."
+          }
+        }
+      }
+    },
+    "El archivo no tiene páginas." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file has no pages."
+          }
+        }
+      }
+    },
     "El modo de lote detecta la siguiente hoja automáticamente y sigue capturando por ti, página tras página." : {
       "localizations" : {
         "en" : {
@@ -934,6 +954,26 @@
         }
       }
     },
+    "Importar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import"
+          }
+        }
+      }
+    },
+    "Importar PDF o imagen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import PDF or image"
+          }
+        }
+      }
+    },
     "Intenta de nuevo." : {
       "localizations" : {
         "en" : {
@@ -1117,6 +1157,16 @@
         }
       }
     },
+    "No se pudo abrir el archivo." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file couldn't be opened."
+          }
+        }
+      }
+    },
     "No se pudo guardar el documento combinado." : {
       "localizations" : {
         "en" : {
@@ -1133,6 +1183,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The document couldn't be saved."
+          }
+        }
+      }
+    },
+    "No se pudo importar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't import"
           }
         }
       }
@@ -1232,6 +1292,16 @@
     },
     "PDF" : {
       "shouldTranslate" : false
+    },
+    "Para un documento más largo, impórtalo en partes y únelas con Combinar." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "For a longer document, import it in parts and join them with Combine."
+          }
+        }
+      }
     },
     "Pasaporte" : {
       "localizations" : {
@@ -1439,6 +1509,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Saved encrypted, only on this phone."
+          }
+        }
+      }
+    },
+    "Se importaron las primeras %lld páginas" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The first %lld pages were imported"
           }
         }
       }

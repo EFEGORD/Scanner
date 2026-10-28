@@ -358,3 +358,87 @@ final class PDFExportTests: XCTestCase {
         XCTAssertGreaterThan(hit.bounds(for: page).midY, page.bounds(for: .mediaBox).midY)
     }
 }
+
+// MARK: - Importar PDF o imagen (Archivos o compartido desde otra app)
+
+final class DocumentImporterTests: XCTestCase {
+    private var directory: URL!
+
+    override func setUpWithError() throws {
+        directory = FileManager.default.temporaryDirectory.appendingPathComponent("import-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    }
+
+    override func tearDownWithError() throws {
+        try? FileManager.default.removeItem(at: directory)
+    }
+
+    private func write(_ data: Data, as name: String) throws -> URL {
+        let url = directory.appendingPathComponent(name)
+        try data.write(to: url)
+        return url
+    }
+
+    func testPDFPagesBecomeImagesToSign() async throws {
+        let page = textImage(["CONTRATO"])
+        let url = try write(PDFGenerator.makePDF(pages: [(page, []), (page, [])]), as: "contrato.pdf")
+
+        let imported = try await DocumentImporter.pages(from: [url])
+
+        XCTAssertEqual(imported.pages.count, 2)
+        XCTAssertFalse(imported.truncated)
+        let first = try XCTUnwrap(imported.pages.first)
+        XCTAssertEqual(first.size.width * first.scale, DocumentImporter.pageWidth, accuracy: 2)
+        XCTAssertEqual(first.size.height / first.size.width, 1754 / 1240, accuracy: 0.01)
+        // The page's content comes through (the text is readable again after import).
+        let text = try await TextRecognizer.recognizeText(in: first)
+        XCTAssertTrue(text.uppercased().contains("CONTRATO"))
+    }
+
+    func testLongPDFKeepsTheFirstPagesOnly() async throws {
+        let small = solidImage(.white, size: CGSize(width: 100, height: 130))
+        let pages = Array(repeating: (image: small, lines: [TextRecognizer.RecognizedLine]()), count: DocumentImporter.maxPages + 2)
+        let url = try write(PDFGenerator.makePDF(pages: pages), as: "largo.pdf")
+
+        let imported = try await DocumentImporter.pages(from: [url])
+
+        XCTAssertEqual(imported.pages.count, DocumentImporter.maxPages)
+        XCTAssertTrue(imported.truncated)
+    }
+
+    func testImagesAndPDFsTogetherMakeOneDocument() async throws {
+        let png = try write(try XCTUnwrap(solidImage(.white, size: CGSize(width: 800, height: 600)).pngData()), as: "foto.png")
+        let pdf = try write(PDFGenerator.makePDF(pages: [(textImage(["A"]), [])]), as: "uno.pdf")
+
+        let imported = try await DocumentImporter.pages(from: [png, pdf])
+
+        XCTAssertEqual(imported.pages.count, 2)
+        XCTAssertEqual(imported.pages[0].size, CGSize(width: 800, height: 600))
+    }
+
+    func testUnreadableFileIsReported() async throws {
+        let url = try write(Data("no es un documento".utf8), as: "nota.txt")
+        do {
+            _ = try await DocumentImporter.pages(from: [url])
+            XCTFail("debió fallar")
+        } catch {
+            XCTAssertEqual(error as? DocumentImporter.ImportError, .unreadable)
+        }
+    }
+
+    /// Only the unencrypted copies iOS puts in Documents/Inbox are deleted; a file picked in
+    /// Files is the user's own.
+    func testOnlyInboxCopiesAreDiscarded() throws {
+        let picked = try write(Data("x".utf8), as: "propio.pdf")
+        let inbox = try XCTUnwrap(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first)
+            .appendingPathComponent("Inbox", isDirectory: true)
+        try FileManager.default.createDirectory(at: inbox, withIntermediateDirectories: true)
+        let shared = inbox.appendingPathComponent("compartido-\(UUID().uuidString).pdf")
+        try Data("x".utf8).write(to: shared)
+
+        ImportInbox.discard([picked, shared])
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: picked.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: shared.path))
+    }
+}
