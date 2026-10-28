@@ -10,7 +10,8 @@ BUILD_NUMBER="$1"
 SCHEME="UltraScanner"
 BUNDLE_ID="mx.com.claudita.ultrascanner"
 TEAM_ID="C6XD8H2J47" # Fernando Jimenez Gordillo (Apple Developer Program)
-PROFILE="UltraScanner App Store" # creado con scripts/asc_profile.py
+PROFILE="UltraScanner App Store" # creados con scripts/asc_profile.py
+SHARE_PROFILE="UltraScanner Compartir App Store"
 OUT="$HOME/Library/Developer/UltraScannerAppStore"
 
 ASC_ENV="$HOME/.appstoreconnect/asc.env"
@@ -33,7 +34,6 @@ xcodebuild archive \
   -derivedDataPath "$OUT/build" \
   -allowProvisioningUpdates "${AUTH[@]}" \
   DEVELOPMENT_TEAM="$TEAM_ID" \
-  CODE_SIGN_STYLE=Automatic \
   CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
   | grep -E "error:|ARCHIVE (SUCCEEDED|FAILED)" || true
 
@@ -75,6 +75,7 @@ cat > "$OUT/ExportOptions.plist" <<EOF
   <key>provisioningProfiles</key>
   <dict>
     <key>$BUNDLE_ID</key><string>$PROFILE</string>
+    <key>$BUNDLE_ID.share</key><string>$SHARE_PROFILE</string>
   </dict>
   <key>uploadSymbols</key><true/>
   <key>manageAppVersionAndBuildNumber</key><false/>

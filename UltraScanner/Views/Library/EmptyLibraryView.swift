@@ -3,7 +3,8 @@ import SwiftUI
 /// First-run state of the Biblioteca (Vacia.dc.html in the design canvas).
 struct EmptyLibraryView: View {
     let onScan: () -> Void
-    let onImport: () -> Void
+    let onImportPhotos: () -> Void
+    let onImportFiles: () -> Void
 
     var body: some View {
         VStack(spacing: 20) {
@@ -36,12 +37,20 @@ struct EmptyLibraryView: View {
                 }
                 .buttonStyle(.primaryFilled)
 
-                Button(action: onImport) {
-                    Label("Importar PDF o imagen", systemImage: "square.and.arrow.down")
+                Menu {
+                    Button(action: onImportPhotos) {
+                        Label("Fotos", systemImage: "photo.on.rectangle")
+                    }
+                    Button(action: onImportFiles) {
+                        Label("Archivos", systemImage: "folder")
+                    }
+                } label: {
+                    Label("Importar fotos o PDF", systemImage: "square.and.arrow.down")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
                 }
+                .menuOrder(.fixed)
                 .foregroundStyle(Color.accentColor)
             }
             .padding(.horizontal, 28)

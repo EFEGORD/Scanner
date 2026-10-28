@@ -194,6 +194,26 @@
         }
       }
     },
+    "Archivos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Files"
+          }
+        }
+      }
+    },
+    "Arrastra las esquinas hasta los bordes del documento." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Drag the corners to the edges of the document."
+          }
+        }
+      }
+    },
     "Añadido" : {
       "localizations" : {
         "en" : {
@@ -534,6 +554,16 @@
         }
       }
     },
+    "Detectar bordes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detect edges"
+          }
+        }
+      }
+    },
     "Dispositivo" : {
       "localizations" : {
         "en" : {
@@ -794,6 +824,16 @@
         }
       }
     },
+    "Esquina %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corner %lld"
+          }
+        }
+      }
+    },
     "Estado de cuenta" : {
       "localizations" : {
         "en" : {
@@ -870,6 +910,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sharing format"
+          }
+        }
+      }
+    },
+    "Fotos" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Photos"
           }
         }
       }
@@ -964,12 +1014,12 @@
         }
       }
     },
-    "Importar PDF o imagen" : {
+    "Importar fotos o PDF" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Import PDF or image"
+            "value" : "Import photos or PDF"
           }
         }
       }
@@ -1143,6 +1193,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There are no documents in this folder."
+          }
+        }
+      }
+    },
+    "No se encontró un documento en la foto." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No document was found in the photo."
+          }
+        }
+      }
+    },
+    "No se pudieron abrir las fotos. Si están en iCloud, revisa tu conexión." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't open the photos. If they're in iCloud, check your connection."
           }
         }
       }
@@ -1473,6 +1543,16 @@
         }
       }
     },
+    "Recortar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crop"
+          }
+        }
+      }
+    },
     "Renombrar" : {
       "localizations" : {
         "en" : {
@@ -1629,6 +1709,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap + on the pages below, or \"Add all\", to build the document."
+          }
+        }
+      }
+    },
+    "Toda la página" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Whole page"
           }
         }
       }

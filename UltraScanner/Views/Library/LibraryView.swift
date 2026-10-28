@@ -1,8 +1,10 @@
+import PhotosUI
 import SwiftUI
 
 /// Matches Home.dc.html / Vacia.dc.html: title with "Combinar" + Ajustes, a visible search
 /// field (the star feature), folder chips, the document list, and the "Importar" / "Escanear"
-/// buttons. Also opens files shared to the app from elsewhere (ImportInbox).
+/// buttons (Importar: Fotos or Archivos). Also opens photos and files shared to the app from
+/// elsewhere (ImportInbox).
 /// No bottom tab bar — everything lives on this one screen.
 struct LibraryView: View {
     @StateObject private var viewModel = LibraryViewModel()
@@ -13,6 +15,8 @@ struct LibraryView: View {
     @State private var newFolderName = ""
     @State private var path: [ScanDocument] = []
     @State private var showImporter = false
+    @State private var showPhotoPicker = false
+    @State private var photoSelection: [PhotosPickerItem] = []
     @State private var importBatch: ImportBatch?
     @State private var isImporting = false
     @State private var importError: String?
@@ -32,7 +36,9 @@ struct LibraryView: View {
                         documentList
                     }
                 } else {
-                    EmptyLibraryView(onScan: { showScanner = true }, onImport: { showImporter = true })
+                    EmptyLibraryView(onScan: { showScanner = true },
+                                     onImportPhotos: { showPhotoPicker = true },
+                                     onImportFiles: { showImporter = true })
                 }
             }
             .background(Color(.systemGroupedBackground))
@@ -61,7 +67,15 @@ struct LibraryView: View {
             }
             .fileImporter(isPresented: $showImporter, allowedContentTypes: DocumentImporter.contentTypes,
                           allowsMultipleSelection: true) { result in
-                if case .success(let urls) = result, !urls.isEmpty { startImport(urls, source: "files") }
+                if case .success(let urls) = result, !urls.isEmpty { importFiles(urls, source: "files") }
+            }
+            .photosPicker(isPresented: $showPhotoPicker, selection: $photoSelection,
+                          maxSelectionCount: DocumentImporter.maxPages, selectionBehavior: .ordered,
+                          matching: .images, preferredItemEncoding: .current)
+            .onChange(of: photoSelection) {
+                guard !photoSelection.isEmpty else { return }
+                importPhotos(photoSelection)
+                photoSelection = []
             }
             .fullScreenCover(item: $importBatch, onDismiss: { viewModel.load() }) { batch in
                 ImportFlowView(batch: batch)
@@ -74,7 +88,7 @@ struct LibraryView: View {
             }
             // Shared from another app: only once unlocked, so it can't open past Face ID.
             .onAppear(perform: importShared)
-            .onChange(of: inbox.pending) { importShared() }
+            .onChange(of: inbox.hasPending) { importShared() }
             .onChange(of: appLock.isLocked) { importShared() }
             .sheet(isPresented: $showCombine, onDismiss: { viewModel.load() }) {
                 CombineDocumentsView()
@@ -278,7 +292,14 @@ struct LibraryView: View {
     }
 
     private var importButton: some View {
-        Button { showImporter = true } label: {
+        Menu {
+            Button { showPhotoPicker = true } label: {
+                Label("Fotos", systemImage: "photo.on.rectangle")
+            }
+            Button { showImporter = true } label: {
+                Label("Archivos", systemImage: "folder")
+            }
+        } label: {
             Label("Importar", systemImage: "square.and.arrow.down")
                 .font(.headline)
                 .foregroundStyle(Color.accentColor)
@@ -286,18 +307,39 @@ struct LibraryView: View {
                 .background(Color.accentColor.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
                 .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5))
         }
+        .menuOrder(.fixed)
         .disabled(isImporting)
     }
 
     // MARK: - Import
 
     private func importShared() {
-        guard !appLock.isLocked, importBatch == nil, !isImporting, !inbox.pending.isEmpty else { return }
-        startImport(inbox.take(), source: "shared")
+        guard !appLock.isLocked, importBatch == nil, !isImporting else { return }
+        inbox.refresh()
+        guard inbox.hasPending else { return }
+        importFiles(inbox.take(), source: "shared")
     }
 
-    /// PDFs and images become pages for the same review → edit / sign → save flow as a scan.
-    private func startImport(_ urls: [URL], source: String) {
+    private func importFiles(_ urls: [URL], source: String) {
+        startImport(source: source, discarding: urls) { urls.map(DocumentImporter.Source.file) }
+    }
+
+    /// Photos in iCloud are downloaded here; any that can't be are left out.
+    private func importPhotos(_ items: [PhotosPickerItem]) {
+        startImport(source: "photos") {
+            var photos: [DocumentImporter.Source] = []
+            for item in items {
+                if let data = try? await item.loadTransferable(type: Data.self) { photos.append(.photo(data)) }
+            }
+            if photos.isEmpty { throw DocumentImporter.ImportError.photosUnavailable }
+            return photos
+        }
+    }
+
+    /// Photos, PDFs and images all become pages of ONE document, for the same review → edit / sign
+    /// → save flow as a scan.
+    private func startImport(source: String, discarding urls: [URL] = [],
+                             load: @escaping () async throws -> [DocumentImporter.Source]) {
         isImporting = true
         Task {
             defer {
@@ -305,9 +347,9 @@ struct LibraryView: View {
                 ImportInbox.discard(urls)
             }
             do {
-                let imported = try await DocumentImporter.pages(from: urls)
+                let imported = try await DocumentImporter.pages(from: try await load())
                 let session = ScanSessionViewModel()
-                session.addCapturedPages(imported.pages)
+                await session.addImportedPages(imported.pages)
                 importBatch = ImportBatch(session: session, truncated: imported.truncated)
                 AppAnalytics.log(.documentImported, ["pages": imported.pages.count, "source": source])
             } catch {

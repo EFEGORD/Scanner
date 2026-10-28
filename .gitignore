@@ -6,3 +6,5 @@ UltraScanner/Info.plist
 .swiftpm/
 AppStore/contacto.local.json
 UltraScanner/GoogleService-Info.plist
+UltraScannerShare/Info.plist
+*.entitlements

@@ -1,0 +1,24 @@
+{
+  "sourceLanguage" : "es",
+  "strings" : {
+    "Abriendo en UltraScanner…" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Opening in UltraScanner…" } }
+      }
+    },
+    "Listo. Abre UltraScanner para revisarlo y guardarlo." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Done. Open UltraScanner to review and save it." } }
+      }
+    },
+    "No se pudo abrir ningún archivo. Comparte fotos o PDFs." : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't open any file. Share photos or PDFs." } }
+      }
+    },
+    "OK" : {
+      "shouldTranslate" : false
+    }
+  },
+  "version" : "1.0"
+}

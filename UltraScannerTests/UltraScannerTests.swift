@@ -359,7 +359,7 @@ final class PDFExportTests: XCTestCase {
     }
 }
 
-// MARK: - Importar PDF o imagen (Archivos o compartido desde otra app)
+// MARK: - Importar fotos, PDF o imagen (Fotos, Archivos o compartido desde otra app)
 
 final class DocumentImporterTests: XCTestCase {
     private var directory: URL!
@@ -387,7 +387,8 @@ final class DocumentImporterTests: XCTestCase {
 
         XCTAssertEqual(imported.pages.count, 2)
         XCTAssertFalse(imported.truncated)
-        let first = try XCTUnwrap(imported.pages.first)
+        let first = try XCTUnwrap(imported.pages.first?.image)
+        XCTAssertNil(imported.pages.first?.crop)
         XCTAssertEqual(first.size.width * first.scale, DocumentImporter.pageWidth, accuracy: 2)
         XCTAssertEqual(first.size.height / first.size.width, 1754 / 1240, accuracy: 0.01)
         // The page's content comes through (the text is readable again after import).
@@ -413,7 +414,7 @@ final class DocumentImporterTests: XCTestCase {
         let imported = try await DocumentImporter.pages(from: [png, pdf])
 
         XCTAssertEqual(imported.pages.count, 2)
-        XCTAssertEqual(imported.pages[0].size, CGSize(width: 800, height: 600))
+        XCTAssertEqual(imported.pages[0].image.size, CGSize(width: 800, height: 600))
     }
 
     func testUnreadableFileIsReported() async throws {
@@ -426,19 +427,136 @@ final class DocumentImporterTests: XCTestCase {
         }
     }
 
-    /// Only the unencrypted copies iOS puts in Documents/Inbox are deleted; a file picked in
-    /// Files is the user's own.
-    func testOnlyInboxCopiesAreDiscarded() throws {
+    /// Several photos picked in Fotos make one document, in the order they were picked.
+    func testPhotosBecomePagesInOrder() async throws {
+        let wide = try XCTUnwrap(solidImage(.white, size: CGSize(width: 900, height: 600)).jpegData(compressionQuality: 0.9))
+        let tall = try XCTUnwrap(solidImage(.white, size: CGSize(width: 600, height: 900)).jpegData(compressionQuality: 0.9))
+
+        let imported = try await DocumentImporter.pages(from: [.photo(wide), .photo(tall), .photo(wide)])
+
+        XCTAssertEqual(imported.pages.map(\.image.size), [CGSize(width: 900, height: 600), CGSize(width: 600, height: 900),
+                                                          CGSize(width: 900, height: 600)])
+        // A plain photo with no document in it stays whole.
+        XCTAssertTrue(imported.pages.allSatisfy { $0.crop == nil })
+    }
+
+    private func makeBatch(in inbox: URL, named name: String, files: [String]) throws -> URL {
+        let batch = inbox.appendingPathComponent(name, isDirectory: true)
+        try FileManager.default.createDirectory(at: batch, withIntermediateDirectories: true)
+        for file in files { try Data("x".utf8).write(to: batch.appendingPathComponent(file)) }
+        return batch
+    }
+
+    /// Everything shared waits in the inbox; the app takes every ready batch once, in order, and
+    /// never a batch the extension is still writing.
+    func testSharedBatchesAreTakenOnceInOrder() throws {
+        let inbox = directory.appendingPathComponent("Inbox", isDirectory: true)
+        _ = try makeBatch(in: inbox, named: "200-b", files: ["001.jpg"])
+        _ = try makeBatch(in: inbox, named: "100-a", files: ["002.pdf", "001.heic"])
+        _ = try makeBatch(in: inbox, named: ".escribiendo", files: ["001.jpg"])
+
+        let files = ImportInbox.claim(in: inbox)
+
+        XCTAssertEqual(files.map(\.lastPathComponent), ["001.heic", "002.pdf", "001.jpg"])
+        XCTAssertTrue(ImportInbox.claim(in: inbox).isEmpty)
+        XCTAssertTrue(SharedInbox.readyBatches(in: inbox).isEmpty)
+
+        // Once imported, the copies and their folders are gone; files picked in Archivos stay.
         let picked = try write(Data("x".utf8), as: "propio.pdf")
-        let inbox = try XCTUnwrap(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first)
-            .appendingPathComponent("Inbox", isDirectory: true)
-        try FileManager.default.createDirectory(at: inbox, withIntermediateDirectories: true)
-        let shared = inbox.appendingPathComponent("compartido-\(UUID().uuidString).pdf")
-        try Data("x".utf8).write(to: shared)
-
-        ImportInbox.discard([picked, shared])
-
+        ImportInbox.discard(files + [picked], inbox: inbox)
         XCTAssertTrue(FileManager.default.fileExists(atPath: picked.path))
-        XCTAssertFalse(FileManager.default.fileExists(atPath: shared.path))
+        let left = try FileManager.default.contentsOfDirectory(atPath: inbox.path)
+        XCTAssertEqual(left, [".escribiendo"])
+    }
+
+    func testOldLeftoversAreDiscarded() throws {
+        let inbox = directory.appendingPathComponent("Inbox", isDirectory: true)
+        _ = try makeBatch(in: inbox, named: ".escribiendo", files: ["001.jpg"])
+        _ = try makeBatch(in: inbox, named: "100-listo", files: ["001.jpg"])
+
+        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(60))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: inbox.path).count, 2)
+
+        // A half-written share after ten minutes; a share never opened after a day.
+        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(11 * 60))
+        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: inbox.path), ["100-listo"])
+        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(25 * 60 * 60))
+        XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath: inbox.path).isEmpty)
+    }
+}
+
+// MARK: - Recortar (documento dentro de una foto)
+
+final class CropTests: XCTestCase {
+    /// A white sheet, slightly turned, on a dark table.
+    private let sheet = PageQuad(topLeft: CGPoint(x: 0.22, y: 0.14), topRight: CGPoint(x: 0.80, y: 0.18),
+                                 bottomRight: CGPoint(x: 0.76, y: 0.88), bottomLeft: CGPoint(x: 0.18, y: 0.84))
+
+    private func photoOfSheet(size: CGSize = CGSize(width: 1200, height: 1600)) -> UIImage {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        return UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor(white: 0.15, alpha: 1).setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+            let path = UIBezierPath()
+            let points = sheet.corners.map { CGPoint(x: $0.x * size.width, y: $0.y * size.height) }
+            path.move(to: points[0])
+            points.dropFirst().forEach(path.addLine)
+            path.close()
+            UIColor.white.setFill()
+            path.fill()
+        }
+    }
+
+    func testRotatingTheCornersAndBackGivesTheSameCrop() {
+        for turns in 0..<4 {
+            let back = sheet.rotated(quarterTurns: turns).rotated(quarterTurns: -turns)
+            for (a, b) in zip(back.corners, sheet.corners) {
+                XCTAssertEqual(a.x, b.x, accuracy: 0.0001)
+                XCTAssertEqual(a.y, b.y, accuracy: 0.0001)
+            }
+        }
+        // One turn clockwise: the top-left corner of the photo ends up top-right.
+        XCTAssertEqual(PageQuad.full.rotated(quarterTurns: 1).topLeft, CGPoint(x: 1, y: 0))
+        XCTAssertEqual(sheet.area, PageQuad.full.area * 0.58 * 0.70, accuracy: 0.03)
+    }
+
+    func testCropStraightensTheSheet() throws {
+        let cropped = PageRenderer.cropped(photoOfSheet(), to: sheet)
+
+        // Upright page proportions, and only the sheet is left (no table at the corners).
+        XCTAssertGreaterThan(cropped.size.height, cropped.size.width)
+        for point in [CGPoint(x: 8, y: 8), CGPoint(x: cropped.size.width - 8, y: 8),
+                      CGPoint(x: 8, y: cropped.size.height - 8),
+                      CGPoint(x: cropped.size.width - 8, y: cropped.size.height - 8)] {
+            XCTAssertGreaterThan(brightness(of: cropped, at: point), 0.8, "\(point)")
+        }
+        // No crop keeps the photo as it is.
+        let photo = photoOfSheet()
+        XCTAssertTrue(PageRenderer.cropped(photo, to: nil) === photo)
+        XCTAssertTrue(PageRenderer.cropped(photo, to: .full) === photo)
+    }
+
+    func testEditedPageUsesTheCrop() {
+        var page = PageEditState(original: photoOfSheet(), crop: sheet)
+        XCTAssertFalse(page.hasEdits)
+        XCTAssertGreaterThan(brightness(of: page.thumbnail, at: CGPoint(x: 4, y: 4)), 0.8)
+        XCTAssertGreaterThan(brightness(of: page.rendered(), at: CGPoint(x: 8, y: 8)), 0.8)
+
+        page.crop = nil
+        XCTAssertTrue(page.hasEdits)
+        XCTAssertLessThan(brightness(of: page.thumbnail, at: CGPoint(x: 4, y: 4)), 0.3)
+        XCTAssertEqual(page.rendered().size, CGSize(width: 1200, height: 1600))
+    }
+
+    /// Vision finds the sheet in the photo. (Document detection needs a real device's Neural
+    /// Engine on some simulators; then the test is skipped instead of failing.)
+    func testDetectorFindsTheSheet() throws {
+        let found = try XCTUnwrap(DocumentDetector.detect(in: photoOfSheet()), "sin detección en este simulador")
+        for (a, b) in zip(found.corners, sheet.corners) {
+            XCTAssertEqual(a.x, b.x, accuracy: 0.05)
+            XCTAssertEqual(a.y, b.y, accuracy: 0.05)
+        }
+        XCTAssertNil(DocumentDetector.detect(in: solidImage(.white, size: CGSize(width: 800, height: 1000))))
     }
 }

@@ -57,10 +57,13 @@ struct UltraScannerApp: App {
             AdManager.shared.prepareIfConsented()
         }
         .task { await DocumentTypeBackfill.run() }
-        // A PDF or image shared from another app; the Biblioteca imports it once unlocked.
-        .onOpenURL { ImportInbox.shared.receive($0) }
+        // Photos or PDFs shared from another app (the share extension opens ultrascanner://import);
+        // the Biblioteca imports them once unlocked. Also checked on every return, in case iOS
+        // didn't let the extension open the app.
+        .onOpenURL { _ in ImportInbox.shared.refresh() }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             appLock.lockIfNeeded()
+            ImportInbox.shared.refresh()
         }
     }
 }

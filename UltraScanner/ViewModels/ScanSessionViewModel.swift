@@ -13,6 +13,14 @@ final class ScanSessionViewModel: ObservableObject {
         pages.append(contentsOf: images.map { PageEditState(original: $0) })
     }
 
+    /// Photos arrive cropped to the document found in them; the previews are made off the main thread.
+    func addImportedPages(_ imported: [DocumentImporter.Page]) async {
+        let states = await Task.detached(priority: .userInitiated) {
+            imported.map { PageEditState(original: $0.image, crop: $0.crop) }
+        }.value
+        pages.append(contentsOf: states)
+    }
+
     func removePage(at index: Int) {
         guard pages.indices.contains(index) else { return }
         pages.remove(at: index)

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Matches Editar.dc.html: dark editor with the page, filter pills and Rotar / Firmar.
+/// Matches Editar.dc.html: dark editor with the page, filter pills and Recortar / Rotar / Firmar.
 /// Used for a new scan (before saving) and for a document that's already saved.
 struct PageEditorView: View {
     @Binding var pages: [PageEditState]
@@ -11,6 +11,7 @@ struct PageEditorView: View {
     @State private var currentIndex = 0
     @State private var previews: [UUID: UIImage] = [:]
     @State private var showSignaturePad = false
+    @State private var showCrop = false
 
     private struct FilterOption: Identifiable {
         let filter: PageFilter
@@ -55,6 +56,14 @@ struct PageEditorView: View {
         .navigationTitle("Editar")
         .navigationBarTitleDisplayMode(.inline)
         .task(id: previewKey) { await refreshPreview() }
+        .fullScreenCover(isPresented: $showCrop) {
+            CropEditorView(page: pages[currentIndex]) { crop in
+                guard crop != pages[currentIndex].crop else { return }
+                pages[currentIndex].crop = crop
+                // Signature positions are relative to the page as drawn (see Rotar).
+                pages[currentIndex].signatures.removeAll()
+            }
+        }
         .sheet(isPresented: $showSignaturePad) {
             SignaturePadView { image in
                 pages[currentIndex].signatures.append(
@@ -69,7 +78,7 @@ struct PageEditorView: View {
     private var previewKey: String {
         guard pages.indices.contains(currentIndex) else { return "" }
         let page = pages[currentIndex]
-        return "\(page.id)-\(page.filter.rawValue)-\(page.quarterTurns)"
+        return "\(page.id)-\(page.filter.rawValue)-\(page.quarterTurns)-\(String(describing: page.crop))"
     }
 
     private func refreshPreview() async {
@@ -170,6 +179,9 @@ struct PageEditorView: View {
 
     private var toolbar: some View {
         HStack {
+            toolButton("Recortar", systemImage: "crop") {
+                showCrop = true
+            }
             toolButton("Rotar", systemImage: "rotate.right") {
                 pages[currentIndex].quarterTurns += 1
                 // Signature positions are relative to the page as drawn; after a rotation
@@ -180,7 +192,7 @@ struct PageEditorView: View {
                 showSignaturePad = true
             }
         }
-        .padding(.horizontal, 40)
+        .padding(.horizontal, 24)
         .padding(.bottom, 14)
     }
 

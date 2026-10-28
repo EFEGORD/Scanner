@@ -65,7 +65,7 @@ struct PageReviewView: View {
     }
 
     private func pageCell(_ page: PageEditState, index: Int) -> some View {
-        Image(uiImage: page.original)
+        Image(uiImage: page.thumbnail)
             .resizable()
             .aspectRatio(3.0 / 4.0, contentMode: .fill)
             .clipShape(RoundedRectangle(cornerRadius: 14))

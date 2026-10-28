@@ -40,6 +40,24 @@ enum PageRenderer {
         return UIImage(cgImage: cgImage, scale: image.scale, orientation: .up)
     }
 
+    /// The document inside `quad`, straightened into a flat page (Recortar).
+    static func cropped(_ image: UIImage, to quad: PageQuad?) -> UIImage {
+        guard let quad, quad != .full, let input = CIImage(image: image) else { return image }
+        let width = input.extent.width, height = input.extent.height
+        // Core Image's origin is bottom-left.
+        func point(_ fraction: CGPoint) -> CGPoint { CGPoint(x: fraction.x * width, y: (1 - fraction.y) * height) }
+
+        let f = CIFilter.perspectiveCorrection()
+        f.inputImage = input
+        f.topLeft = point(quad.topLeft)
+        f.topRight = point(quad.topRight)
+        f.bottomRight = point(quad.bottomRight)
+        f.bottomLeft = point(quad.bottomLeft)
+        guard let output = f.outputImage, !output.extent.isEmpty,
+              let cgImage = context.createCGImage(output, from: output.extent) else { return image }
+        return UIImage(cgImage: cgImage, scale: image.scale, orientation: .up)
+    }
+
     static func rotated(_ image: UIImage, quarterTurns: Int) -> UIImage {
         let turns = ((quarterTurns % 4) + 4) % 4
         guard turns != 0 else { return image }

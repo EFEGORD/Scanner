@@ -1,55 +1,71 @@
 import Foundation
 
-/// Files shared to UltraScanner from another app ("Compartir" › UltraScanner in WhatsApp, Mail,
-/// Files…). iOS copies each one, unencrypted, into Documents/Inbox and opens the app with its URL;
-/// the Biblioteca imports it once the app is unlocked (never past the Face ID lock), and the copy
-/// is deleted right after being read.
+/// Photos and PDFs shared to UltraScanner from another app ("Compartir" › UltraScanner in Fotos,
+/// WhatsApp, Mail, Archivos…). The share extension copies them, unencrypted, into the App Group
+/// inbox (SharedInbox) and opens the app; the Biblioteca imports everything that's waiting once
+/// the app is unlocked (never past the Face ID lock), and the copies are deleted right after being
+/// read.
 @MainActor
 final class ImportInbox: ObservableObject {
     static let shared = ImportInbox()
 
-    @Published private(set) var pending: [URL] = []
+    @Published private(set) var hasPending = false
 
     private init() {}
 
-    func receive(_ url: URL) {
-        pending.append(url)
+    /// Called when the extension opens the app, and whenever the app comes back (if iOS didn't let
+    /// the extension open it, the user opens it themself).
+    func refresh() {
+        hasPending = SharedInbox.directory.map { !SharedInbox.readyBatches(in: $0).isEmpty } ?? false
     }
 
+    /// Every shared file waiting, in the order it was shared.
     func take() -> [URL] {
-        defer { pending = [] }
-        return pending
+        hasPending = false
+        guard let directory = SharedInbox.directory else { return [] }
+        return Self.claim(in: directory)
     }
 
-    /// Deletes the copies iOS made for us. Files picked in Files are the user's own and stay.
-    nonisolated static func discard(_ urls: [URL]) {
-        for url in urls where isInbox(url) {
+    /// Moves each ready batch out of sight so it's never imported twice, and lists its files.
+    nonisolated static func claim(in inbox: URL) -> [URL] {
+        var files: [URL] = []
+        for batch in SharedInbox.readyBatches(in: inbox) {
+            let claimed = inbox.appendingPathComponent(".importing-\(batch.lastPathComponent)", isDirectory: true)
+            guard (try? FileManager.default.moveItem(at: batch, to: claimed)) != nil else { continue }
+            files += SharedInbox.files(in: claimed)
+        }
+        return files
+    }
+
+    /// Deletes the shared copies (and their batch folder). Files picked in Archivos are the user's
+    /// own and stay.
+    nonisolated static func discard(_ urls: [URL], inbox: URL? = SharedInbox.directory) {
+        guard let inbox else { return }
+        let root = inbox.standardizedFileURL.path + "/"
+        var batches = Set<URL>()
+        for url in urls where url.standardizedFileURL.path.hasPrefix(root) {
             try? FileManager.default.removeItem(at: url)
+            batches.insert(url.deletingLastPathComponent())
+        }
+        for batch in batches where batch.standardizedFileURL.path.hasPrefix(root)
+            && ((try? FileManager.default.contentsOfDirectory(atPath: batch.path)) ?? []).isEmpty {
+            try? FileManager.default.removeItem(at: batch)
         }
     }
 
-    /// Copies left behind if the app closed before importing them (older than ten minutes, so a
-    /// file that just opened the app isn't touched).
-    nonisolated static func discardLeftovers() {
-        guard let inbox = inboxURL,
-              let files = try? FileManager.default.contentsOfDirectory(
+    /// Copies left behind: half-written or half-imported ones (older than ten minutes, so a share
+    /// in progress isn't touched) and shares never opened in a day.
+    nonisolated static func discardLeftovers(inbox: URL? = SharedInbox.directory, now: Date = .now) {
+        guard let inbox,
+              let batches = try? FileManager.default.contentsOfDirectory(
                 at: inbox, includingPropertiesForKeys: [.contentModificationDateKey]) else { return }
-        let cutoff = Date.now.addingTimeInterval(-10 * 60)
-        for file in files {
-            let modified = (try? file.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
-            if (modified ?? .distantPast) < cutoff {
-                try? FileManager.default.removeItem(at: file)
+        for batch in batches {
+            let modified = (try? batch.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+            let age = now.timeIntervalSince(modified ?? .distantPast)
+            let hidden = batch.lastPathComponent.hasPrefix(".")
+            if age > (hidden ? 10 * 60 : 24 * 60 * 60) {
+                try? FileManager.default.removeItem(at: batch)
             }
         }
-    }
-
-    private nonisolated static var inboxURL: URL? {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?
-            .appendingPathComponent("Inbox", isDirectory: true)
-    }
-
-    private nonisolated static func isInbox(_ url: URL) -> Bool {
-        guard let inbox = inboxURL?.standardizedFileURL.path else { return false }
-        return url.standardizedFileURL.path.hasPrefix(inbox + "/")
     }
 }

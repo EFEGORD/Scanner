@@ -112,9 +112,24 @@ ni nombres de carpetas. Respeta el mismo formulario de consentimiento de Google 
 - El modo demo (`Demo/DemoMode.swift`, `-USDemo YES -USScreen library|search|viewer|combine|security`)
   llena la biblioteca con documentos dibujados en la app y pasados por el OCR real. Solo existe
   en Debug; `mac-appstore.sh` se detiene si aparece en el binario de Release.
-- La subida firma con el certificado «Apple Distribution» del llavero de la Mac y el perfil
-  «UltraScanner App Store» (`scripts/asc_profile.py`, vence 2027-10-16). Usa el agente de
-  UltraVocal (`mac-build.sh appstore <compilación>`); sin agente, pide la contraseña de sudo.
+- La subida firma con el certificado «Apple Distribution» del llavero de la Mac y los perfiles
+  «UltraScanner App Store» y «UltraScanner Compartir App Store» (`scripts/asc_profile.py`). Usa el
+  agente de UltraVocal (`mac-build.sh appstore <compilación>`); sin agente, pide la contraseña de sudo.
+
+## Firma y extensión de Compartir
+
+La extensión `UltraScannerShare` (Compartir › UltraScanner desde Fotos, WhatsApp, Mail…) le pasa
+las fotos y PDFs a la app por el App Group `group.mx.com.claudita.ultrascanner`. La llave de API no
+puede pedirle a Xcode perfiles con App Groups, así que la firma es manual (project.yml) con cuatro
+perfiles hechos por la API (`scripts/asc_profile.py`: «UltraScanner Dev», «UltraScanner Compartir
+Dev» y los dos «… App Store»).
+
+- `scripts/asc_app_group.py` registra el bundle de la extensión y activa App Groups (ya se corrió).
+- El grupo no se puede crear con la API. En developer.apple.com › Certificates, IDs & Profiles ›
+  Identifiers: crear el App Group `group.mx.com.claudita.ultrascanner` y asignarlo (App Groups ›
+  Configure) a `mx.com.claudita.ultrascanner` y a `mx.com.claudita.ultrascanner.share`.
+- Después, o al agregar un iPhone, cambiar un certificado o cuando venzan, regenerar los perfiles
+  con `asc_profile.py … --renovar`.
 - A mano en App Store Connect: etiqueta de privacidad (`AppStore/privacidad-app-store.md`),
   elegir la compilación en la versión y enviarla a revisión.
 
