@@ -34,6 +34,7 @@ xcodebuild archive \
   -derivedDataPath "$OUT/build" \
   -allowProvisioningUpdates "${AUTH[@]}" \
   DEVELOPMENT_TEAM="$TEAM_ID" \
+  CODE_SIGN_STYLE=Automatic \
   CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
   | grep -E "error:|ARCHIVE (SUCCEEDED|FAILED)" || true
 

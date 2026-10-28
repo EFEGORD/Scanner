@@ -317,11 +317,14 @@ struct LibraryView: View {
         guard !appLock.isLocked, importBatch == nil, !isImporting else { return }
         inbox.refresh()
         guard inbox.hasPending else { return }
-        importFiles(inbox.take(), source: "shared")
+        inbox.markTaken()
+        startImport(source: "shared") {
+            await Task.detached(priority: .userInitiated) { ImportInbox.takeAll() }.value.map(DocumentImporter.Source.data)
+        }
     }
 
     private func importFiles(_ urls: [URL], source: String) {
-        startImport(source: source, discarding: urls) { urls.map(DocumentImporter.Source.file) }
+        startImport(source: source) { urls.map(DocumentImporter.Source.file) }
     }
 
     /// Photos in iCloud are downloaded here; any that can't be are left out.
@@ -329,7 +332,7 @@ struct LibraryView: View {
         startImport(source: "photos") {
             var photos: [DocumentImporter.Source] = []
             for item in items {
-                if let data = try? await item.loadTransferable(type: Data.self) { photos.append(.photo(data)) }
+                if let data = try? await item.loadTransferable(type: Data.self) { photos.append(.data(data)) }
             }
             if photos.isEmpty { throw DocumentImporter.ImportError.photosUnavailable }
             return photos
@@ -338,14 +341,10 @@ struct LibraryView: View {
 
     /// Photos, PDFs and images all become pages of ONE document, for the same review → edit / sign
     /// → save flow as a scan.
-    private func startImport(source: String, discarding urls: [URL] = [],
-                             load: @escaping () async throws -> [DocumentImporter.Source]) {
+    private func startImport(source: String, load: @escaping () async throws -> [DocumentImporter.Source]) {
         isImporting = true
         Task {
-            defer {
-                isImporting = false
-                ImportInbox.discard(urls)
-            }
+            defer { isImporting = false }
             do {
                 let imported = try await DocumentImporter.pages(from: try await load())
                 let session = ScanSessionViewModel()

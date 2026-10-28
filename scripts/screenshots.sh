@@ -36,7 +36,7 @@ xcodegen generate --quiet
 # arranque crea otra llave y no se pueden leer las páginas que guardó el anterior.
 echo "--> Compilando (Debug, simulador)"
 xcodebuild build -project UltraScanner.xcodeproj -scheme UltraScanner -destination "platform=iOS Simulator,name=\$SIM" \
-  -derivedDataPath "\$BUILD" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER= 2>&1 | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
+  -derivedDataPath "\$BUILD" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- 2>&1 | grep -E "error:|BUILD (SUCCEEDED|FAILED)" || true
 APP="\$BUILD/Build/Products/Debug-iphonesimulator/UltraScanner.app"
 [ -d "\$APP" ] || { echo "No se compiló la app." >&2; exit 1; }
 

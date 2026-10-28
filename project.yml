@@ -25,8 +25,12 @@ targets:
     entitlements:
       path: UltraScanner/UltraScanner.entitlements
       properties:
-        # Buzón compartido con la extensión de Compartir (Shared/SharedInbox.swift).
-        com.apple.security.application-groups: [group.mx.com.claudita.ultrascanner]
+        # Buzón en el llavero compartido con la extensión de Compartir (Shared/SharedInbox.swift).
+        # El grupo propio va primero: ahí siguen cayendo los secretos de la app (llave de la base),
+        # fuera del alcance de la extensión. Cabe en el perfil del equipo (C6XD8H2J47.*), sin App Group.
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)mx.com.claudita.ultrascanner
+          - $(AppIdentifierPrefix)mx.com.claudita.ultrascanner.inbox
     info:
       path: UltraScanner/Info.plist
       properties:
@@ -70,12 +74,7 @@ targets:
         # ese, la base de datos deja de abrirse y de cifrarse. Lo revisa testSQLiteIsSQLCipher.
         # -ObjC lo pide Firebase Analytics.
         OTHER_LDFLAGS: $(inherited) -framework SQLCipher -ObjC
-        # Firma manual con perfiles hechos por la API (scripts/asc_profile.py): la llave de API no
-        # puede pedirle a Xcode perfiles con App Groups. Al exportar a la tienda se vuelve a firmar
-        # con los de distribución (mac-appstore.sh).
-        CODE_SIGN_STYLE: Manual
-        CODE_SIGN_IDENTITY: Apple Development
-        PROVISIONING_PROFILE_SPECIFIER: UltraScanner Dev
+        CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: C6XD8H2J47  # Fernando Jimenez Gordillo (Apple Developer Program)
         # Debug usa los IDs de prueba de Google (anuncios de ejemplo); Release, los de la cuenta.
         # mac-appstore.sh se detiene si Release lleva los de prueba.
@@ -99,8 +98,8 @@ targets:
       testTargets:
         - UltraScannerTests
 
-  # Compartir › UltraScanner desde Fotos, WhatsApp, Mail, Archivos…: copia las fotos y PDFs al buzón
-  # del App Group y abre la app, que los junta en un documento.
+  # Compartir › UltraScanner desde Fotos, WhatsApp, Mail, Archivos…: deja las fotos y PDFs en el buzón
+  # del llavero compartido y abre la app, que los junta en un documento.
   UltraScannerShare:
     type: app-extension
     platform: iOS
@@ -110,7 +109,8 @@ targets:
     entitlements:
       path: UltraScannerShare/UltraScannerShare.entitlements
       properties:
-        com.apple.security.application-groups: [group.mx.com.claudita.ultrascanner]
+        keychain-access-groups:
+          - $(AppIdentifierPrefix)mx.com.claudita.ultrascanner.inbox
     info:
       path: UltraScannerShare/Info.plist
       properties:
@@ -132,9 +132,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: mx.com.claudita.ultrascanner.share
         TARGETED_DEVICE_FAMILY: "1"
-        CODE_SIGN_STYLE: Manual # igual que la app
-        CODE_SIGN_IDENTITY: Apple Development
-        PROVISIONING_PROFILE_SPECIFIER: UltraScanner Compartir Dev
+        CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: C6XD8H2J47
 
   UltraScannerTests:

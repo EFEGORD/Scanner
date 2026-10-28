@@ -43,6 +43,7 @@ xcodebuild \
   -authenticationKeyID "$ASC_KEY_ID" \
   -authenticationKeyIssuerID "$ASC_ISSUER_ID" \
   DEVELOPMENT_TEAM="$TEAM_ID" \
+  CODE_SIGN_STYLE=Automatic \
   build | grep -E "error:|warning: .*(sign|provision)|BUILD (SUCCEEDED|FAILED)|Signing Identity|Provisioning Profile" || true
 
 APP="build/Build/Products/$CONFIG-iphoneos/$SCHEME.app"

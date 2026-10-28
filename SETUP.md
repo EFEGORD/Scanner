@@ -115,21 +115,14 @@ ni nombres de carpetas. Respeta el mismo formulario de consentimiento de Google 
 - La subida firma con el certificado «Apple Distribution» del llavero de la Mac y los perfiles
   «UltraScanner App Store» y «UltraScanner Compartir App Store» (`scripts/asc_profile.py`). Usa el
   agente de UltraVocal (`mac-build.sh appstore <compilación>`); sin agente, pide la contraseña de sudo.
+- Extensión de Compartir (`UltraScannerShare`, bundle `mx.com.claudita.ultrascanner.share`, ya
+  registrado): le pasa las fotos y PDFs a la app por un grupo del llavero
+  (`Shared/SharedInbox.swift`), no por App Group. Así cabe en el perfil del equipo (`C6XD8H2J47.*`)
+  con que se instala en el iPhone: la llave de API ya no deja que Xcode cree perfiles nuevos
+  («Authentication failed»), y un App Group pediría uno. Antes de subir la 1.2.0, crear su perfil:
+  `asc_profile.py mx.com.claudita.ultrascanner.share "UltraScanner Compartir App Store" tienda`, y
+  renovar el de la app (`… "UltraScanner App Store" tienda --renovar`).
 
-## Firma y extensión de Compartir
-
-La extensión `UltraScannerShare` (Compartir › UltraScanner desde Fotos, WhatsApp, Mail…) le pasa
-las fotos y PDFs a la app por el App Group `group.mx.com.claudita.ultrascanner`. La llave de API no
-puede pedirle a Xcode perfiles con App Groups, así que la firma es manual (project.yml) con cuatro
-perfiles hechos por la API (`scripts/asc_profile.py`: «UltraScanner Dev», «UltraScanner Compartir
-Dev» y los dos «… App Store»).
-
-- `scripts/asc_app_group.py` registra el bundle de la extensión y activa App Groups (ya se corrió).
-- El grupo no se puede crear con la API. En developer.apple.com › Certificates, IDs & Profiles ›
-  Identifiers: crear el App Group `group.mx.com.claudita.ultrascanner` y asignarlo (App Groups ›
-  Configure) a `mx.com.claudita.ultrascanner` y a `mx.com.claudita.ultrascanner.share`.
-- Después, o al agregar un iPhone, cambiar un certificado o cuando venzan, regenerar los perfiles
-  con `asc_profile.py … --renovar`.
 - A mano en App Store Connect: etiqueta de privacidad (`AppStore/privacidad-app-store.md`),
   elegir la compilación en la versión y enviarla a revisión.
 

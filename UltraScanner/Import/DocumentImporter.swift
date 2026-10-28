@@ -25,10 +25,10 @@ enum DocumentImporter {
     }
 
     enum Source {
-        /// A file from Archivos or shared from another app.
+        /// A file picked in Archivos.
         case file(URL)
-        /// A photo picked in Fotos.
-        case photo(Data)
+        /// A photo picked in Fotos, or a photo or PDF shared from another app.
+        case data(Data)
     }
 
     struct Page {
@@ -62,7 +62,7 @@ enum DocumentImporter {
                 let file: Imported
                 switch source {
                 case .file(let url): file = try pages(from: url, limit: room)
-                case .photo(let data): file = try photoPage(data)
+                case .data(let data): file = try pages(from: data, limit: room)
                 }
                 result.pages += file.pages
                 result.truncated = result.truncated || file.truncated
@@ -77,9 +77,11 @@ enum DocumentImporter {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         guard let data = try? Data(contentsOf: url) else { throw ImportError.unreadable }
+        return try pages(from: data, limit: limit)
+    }
 
-        let type = UTType(filenameExtension: url.pathExtension)
-        if type?.conforms(to: .pdf) == true || data.starts(with: Data("%PDF".utf8)) {
+    private static func pages(from data: Data, limit: Int) throws -> Imported {
+        if data.starts(with: Data("%PDF".utf8)) {
             return try pdfPages(data, limit: limit)
         }
         return try photoPage(data)

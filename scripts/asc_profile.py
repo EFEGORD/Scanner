@@ -5,16 +5,11 @@ LA MAC MINI):
     scp scripts/asc_bundle_id.py scripts/asc_profile.py mac:Library/Developer/UltraScannerASC/
     ssh mac 'python3 ~/Library/Developer/UltraScannerASC/asc_profile.py <bundle> "<nombre>" <tipo> [--renovar]'
 
-Son cuatro (la app y la extensión de Compartir, cada una para instalar en el iPhone y para la tienda):
-
-    mx.com.claudita.ultrascanner        "UltraScanner Dev"                 desarrollo
-    mx.com.claudita.ultrascanner.share  "UltraScanner Compartir Dev"       desarrollo
-    mx.com.claudita.ultrascanner        "UltraScanner App Store"           tienda
-    mx.com.claudita.ultrascanner.share  "UltraScanner Compartir App Store" tienda
-
-La llave de API no puede firmar en la nube (Xcode no le crea perfiles), así que la firma es manual con
-estos perfiles (project.yml). Vuelve a correrlo con --renovar cuando venzan, cambie un certificado, se
-agregue un iPhone (los de desarrollo llevan los iPhone registrados) o cambien las capacidades.
+Para la tienda son dos (tipo «tienda»): «UltraScanner App Store» (mx.com.claudita.ultrascanner) y
+«UltraScanner Compartir App Store» (mx.com.claudita.ultrascanner.share, la extensión de Compartir).
+Para instalar en el iPhone basta el perfil del equipo que ya tiene Xcode; «desarrollo» queda por si
+algún día hace falta uno propio. Vuelve a correrlo con --renovar cuando venzan, cambie un certificado
+o cambien las capacidades del bundle.
 
 Usa los certificados «Apple Development» y «Apple Distribution» que ya están en el llavero de la Mac
 (el de distribución es el mismo de UltraVocal, ~/.appstoreconnect/distribucion) y la llave de API de
@@ -59,7 +54,7 @@ def main():
     bundle = next((b for b in call(jwt, "GET", f"/v1/bundleIds?{query}")["data"]
                    if b["attributes"]["identifier"] == identifier), None)
     if not bundle:
-        raise SystemExit(f"El bundle {identifier} no está registrado (scripts/asc_app_group.py).")
+        raise SystemExit(f"El bundle {identifier} no está registrado (scripts/asc_bundle_id.py).")
 
     # Los certificados de la API que corresponden a los del llavero (misma huella SHA-1).
     wanted = keychain_sha1s(certificate_kind)

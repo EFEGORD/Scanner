@@ -432,7 +432,7 @@ final class DocumentImporterTests: XCTestCase {
         let wide = try XCTUnwrap(solidImage(.white, size: CGSize(width: 900, height: 600)).jpegData(compressionQuality: 0.9))
         let tall = try XCTUnwrap(solidImage(.white, size: CGSize(width: 600, height: 900)).jpegData(compressionQuality: 0.9))
 
-        let imported = try await DocumentImporter.pages(from: [.photo(wide), .photo(tall), .photo(wide)])
+        let imported = try await DocumentImporter.pages(from: [.data(wide), .data(tall), .data(wide)])
 
         XCTAssertEqual(imported.pages.map(\.image.size), [CGSize(width: 900, height: 600), CGSize(width: 600, height: 900),
                                                           CGSize(width: 900, height: 600)])
@@ -440,48 +440,25 @@ final class DocumentImporterTests: XCTestCase {
         XCTAssertTrue(imported.pages.allSatisfy { $0.crop == nil })
     }
 
-    private func makeBatch(in inbox: URL, named name: String, files: [String]) throws -> URL {
-        let batch = inbox.appendingPathComponent(name, isDirectory: true)
-        try FileManager.default.createDirectory(at: batch, withIntermediateDirectories: true)
-        for file in files { try Data("x".utf8).write(to: batch.appendingPathComponent(file)) }
-        return batch
+    /// A PDF shared from another app arrives as data, like a photo.
+    func testSharedPDFDataBecomesPages() async throws {
+        let pdf = PDFGenerator.makePDF(pages: [(textImage(["A"]), []), (textImage(["B"]), [])])
+
+        let imported = try await DocumentImporter.pages(from: [.data(pdf)])
+
+        XCTAssertEqual(imported.pages.count, 2)
     }
 
-    /// Everything shared waits in the inbox; the app takes every ready batch once, in order, and
-    /// never a batch the extension is still writing.
-    func testSharedBatchesAreTakenOnceInOrder() throws {
-        let inbox = directory.appendingPathComponent("Inbox", isDirectory: true)
-        _ = try makeBatch(in: inbox, named: "200-b", files: ["001.jpg"])
-        _ = try makeBatch(in: inbox, named: "100-a", files: ["002.pdf", "001.heic"])
-        _ = try makeBatch(in: inbox, named: ".escribiendo", files: ["001.jpg"])
+    /// The app takes only complete shares (with their marker), oldest first, files in the order
+    /// they were shared.
+    func testOnlyCompleteSharesAreTakenInOrder() {
+        let accounts = ["200-b/001", "100-a/002", "100-a/001", "300-escribiendo/001", "200-b", "100-a"]
 
-        let files = ImportInbox.claim(in: inbox)
-
-        XCTAssertEqual(files.map(\.lastPathComponent), ["001.heic", "002.pdf", "001.jpg"])
-        XCTAssertTrue(ImportInbox.claim(in: inbox).isEmpty)
-        XCTAssertTrue(SharedInbox.readyBatches(in: inbox).isEmpty)
-
-        // Once imported, the copies and their folders are gone; files picked in Archivos stay.
-        let picked = try write(Data("x".utf8), as: "propio.pdf")
-        ImportInbox.discard(files + [picked], inbox: inbox)
-        XCTAssertTrue(FileManager.default.fileExists(atPath: picked.path))
-        let left = try FileManager.default.contentsOfDirectory(atPath: inbox.path)
-        XCTAssertEqual(left, [".escribiendo"])
-    }
-
-    func testOldLeftoversAreDiscarded() throws {
-        let inbox = directory.appendingPathComponent("Inbox", isDirectory: true)
-        _ = try makeBatch(in: inbox, named: ".escribiendo", files: ["001.jpg"])
-        _ = try makeBatch(in: inbox, named: "100-listo", files: ["001.jpg"])
-
-        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(60))
-        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: inbox.path).count, 2)
-
-        // A half-written share after ten minutes; a share never opened after a day.
-        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(11 * 60))
-        XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: inbox.path), ["100-listo"])
-        ImportInbox.discardLeftovers(inbox: inbox, now: .now.addingTimeInterval(25 * 60 * 60))
-        XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath: inbox.path).isEmpty)
+        XCTAssertEqual(SharedInbox.readyBatches(in: accounts), [
+            SharedInbox.Batch(name: "100-a", files: ["001", "002"]),
+            SharedInbox.Batch(name: "200-b", files: ["001"]),
+        ])
+        XCTAssertTrue(SharedInbox.readyBatches(in: ["300-escribiendo/001"]).isEmpty)
     }
 }
 
