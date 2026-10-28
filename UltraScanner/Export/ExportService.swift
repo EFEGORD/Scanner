@@ -1,5 +1,4 @@
 import Foundation
-import PDFKit
 import UIKit
 
 /// Builds the plaintext file(s) handed to the iOS share sheet. This is the ONLY place a
@@ -11,31 +10,35 @@ enum ExportService {
         case jpegFailed
     }
 
-    static func makeShareFiles(for document: ScanDocument, format: ExportFormat) throws -> [URL] {
+    /// Async: the PDF reads each page's text again to place it (about a second per page).
+    static func makeShareFiles(for document: ScanDocument, format: ExportFormat) async throws -> [URL] {
         let pages = try DocumentRepository.shared.pages(of: document.id)
         let folder = FileManager.default.temporaryDirectory
             .appendingPathComponent("share-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         let baseName = sanitizedFileName(document.title)
 
-        let decrypted: [(image: UIImage, ocrText: String?)] = try pages.compactMap { page -> (image: UIImage, ocrText: String?)? in
-            let data = try SecureFileStore.shared.read(relativePath: page.imagePath)
-            guard let image = UIImage(data: data) else { return nil }
-            return (image: image, ocrText: page.ocrText)
+        let decrypted: [UIImage] = try pages.compactMap { page in
+            UIImage(data: try SecureFileStore.shared.read(relativePath: page.imagePath))
         }
 
         switch format {
         case .pdf:
-            let pdf = PDFGenerator.makePDF(pages: decrypted)
-            guard let data = pdf.dataRepresentation() else { throw ExportError.pdfFailed }
+            // The stored OCR text has no positions, so the invisible text layer is read again here.
+            var withLines: [(image: UIImage, lines: [TextRecognizer.RecognizedLine])] = []
+            for image in decrypted {
+                withLines.append((image, (try? await TextRecognizer.recognizeLines(in: image)) ?? []))
+            }
+            let data = PDFGenerator.makePDF(pages: withLines)
+            guard !data.isEmpty else { throw ExportError.pdfFailed }
             let url = folder.appendingPathComponent("\(baseName).pdf")
             try data.write(to: url, options: .completeFileProtection)
             return [url]
 
         case .jpg:
             var urls: [URL] = []
-            for (index, entry) in decrypted.enumerated() {
-                guard let data = entry.image.jpegData(compressionQuality: 1.0) else { throw ExportError.jpegFailed }
+            for (index, image) in decrypted.enumerated() {
+                guard let data = image.jpegData(compressionQuality: 1.0) else { throw ExportError.jpegFailed }
                 let suffix = decrypted.count > 1 ? " - \(index + 1)" : ""
                 let url = folder.appendingPathComponent("\(baseName)\(suffix).jpg")
                 try data.write(to: url, options: .completeFileProtection)

@@ -64,22 +64,26 @@ struct ShareDocumentView: View {
         isPreparing = true
         errorMessage = nil
         AdManager.shared.beforeSharing {
-            do {
-                let urls = try ExportService.makeShareFiles(for: document, format: format)
-                let activity = UIActivityViewController(activityItems: urls, applicationActivities: nil)
-                activity.completionWithItemsHandler = { _, completed, _, _ in
-                    if completed {
-                        AppAnalytics.log(.documentShared, ["format": format.rawValue])
-                    }
-                    ExportService.cleanUp(urls)
-                    dismiss()
+            Task { @MainActor in await present() }
+        }
+    }
+
+    private func present() async {
+        do {
+            let urls = try await ExportService.makeShareFiles(for: document, format: format)
+            let activity = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+            activity.completionWithItemsHandler = { _, completed, _, _ in
+                if completed {
+                    AppAnalytics.log(.documentShared, ["format": format.rawValue])
                 }
-                isPreparing = false
-                UIApplication.topViewController()?.present(activity, animated: true)
-            } catch {
-                isPreparing = false
-                errorMessage = String(localized: "No se pudo preparar el archivo para compartir.")
+                ExportService.cleanUp(urls)
+                dismiss()
             }
+            isPreparing = false
+            UIApplication.topViewController()?.present(activity, animated: true)
+        } catch {
+            isPreparing = false
+            errorMessage = String(localized: "No se pudo preparar el archivo para compartir.")
         }
     }
 }

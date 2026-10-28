@@ -1,6 +1,7 @@
 import XCTest
 import UIKit
 import GRDB
+import PDFKit
 @testable import UltraScanner
 
 // MARK: - Helpers
@@ -300,5 +301,60 @@ final class DocumentFlowTests: XCTestCase {
 
         SignatureStore.deleteSaved()
         XCTAssertNil(try repository.savedSignature())
+    }
+}
+
+// MARK: - PDF al compartir: capa de texto invisible
+
+final class PDFExportTests: XCTestCase {
+    /// Darkest pixel of the page as rendered (1 = all white).
+    private func darkest(_ page: PDFPage) -> CGFloat {
+        let image = page.thumbnail(of: CGSize(width: 306, height: 396), for: .mediaBox)
+        guard let cgImage = image.cgImage else { return -1 }
+        let width = cgImage.width, height = cgImage.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        let context = CGContext(data: &pixels, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4,
+                                space: CGColorSpaceCreateDeviceRGB(),
+                                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        var darkest: CGFloat = 1
+        for i in stride(from: 0, to: pixels.count, by: 4) {
+            darkest = min(darkest, (CGFloat(pixels[i]) + CGFloat(pixels[i + 1]) + CGFloat(pixels[i + 2])) / (3 * 255))
+        }
+        return darkest
+    }
+
+    /// The bug this replaces: the OCR text went in as a "free text" annotation that many viewers
+    /// drew in a corner of the page.
+    func testTextLayerIsSearchableButNeverShows() throws {
+        let blank = solidImage(.white, size: CGSize(width: 1240, height: 1754))
+        let lines = [TextRecognizer.RecognizedLine(text: "TEXTO INVISIBLE", box: CGRect(x: 0.1, y: 0.8, width: 0.6, height: 0.05)),
+                     TextRecognizer.RecognizedLine(text: "segunda linea", box: CGRect(x: 0.1, y: 0.1, width: 0.4, height: 0.04))]
+        let pdf = try XCTUnwrap(PDFDocument(data: PDFGenerator.makePDF(pages: [(blank, lines)])))
+        let page = try XCTUnwrap(pdf.page(at: 0))
+
+        XCTAssertTrue(page.annotations.isEmpty)
+        XCTAssertTrue(page.string?.contains("TEXTO INVISIBLE") ?? false)
+        XCTAssertTrue(page.string?.contains("segunda linea") ?? false)
+        XCTAssertGreaterThan(darkest(page), 0.98, "la capa de texto no debe verse")
+        // Letter width, the scan's proportions.
+        XCTAssertEqual(page.bounds(for: .mediaBox).width, 612, accuracy: 0.5)
+        XCTAssertEqual(page.bounds(for: .mediaBox).height, 612 * 1754 / 1240, accuracy: 0.5)
+    }
+
+    func testScannedTextIsFoundInTheSharedPDF() async throws {
+        let image = textImage(["CONTRATO DE ARRENDAMIENTO", "RENTA MENSUAL 9500"])
+        let lines = try await TextRecognizer.recognizeLines(in: image)
+        let data = PDFGenerator.makePDF(pages: [(image, lines), (image, lines)])
+        // Left in the simulator's temporary folder to open it in other PDF viewers.
+        try data.write(to: FileManager.default.temporaryDirectory.appendingPathComponent("UltraScannerPDFCheck.pdf"))
+        let pdf = try XCTUnwrap(PDFDocument(data: data))
+
+        XCTAssertEqual(pdf.pageCount, 2)
+        XCTAssertFalse(pdf.findString("ARRENDAMIENTO", withOptions: .caseInsensitive).isEmpty)
+        // Each word sits where it is on the page: the first line is in the top part.
+        let hit = try XCTUnwrap(pdf.findString("CONTRATO", withOptions: .caseInsensitive).first)
+        let page = try XCTUnwrap(hit.pages.first)
+        XCTAssertGreaterThan(hit.bounds(for: page).midY, page.bounds(for: .mediaBox).midY)
     }
 }
